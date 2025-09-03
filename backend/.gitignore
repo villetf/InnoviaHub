@@ -1,0 +1,104 @@
+# Visual Studio-relaterade filer
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+
+# Build-kataloger
+bin
+obj
+Debug/
+Release/
+build/
+BuildArtifacts/
+
+.env*
+
+
+# Paket
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+
+# Loggfiler
+*.log
+*.tlog
+*.log.json
+
+
+# Temporary-filer
+*.tmp
+*.temp
+*.cache
+*.pdb
+*.ilk
+*.idb
+*.opendb
+
+
+# IIS-konfigurationsfiler
+appsettings.Development.json
+appsettings.*.local.json
+
+
+# Distribution och publicering
+publish/
+wwwroot/
+dist/
+
+
+# Resurser och externa verktyg
+node_modules/
+bower_components/
+npm-debug.log*
+yarn-error.log*
+
+
+# Windows-specifika filer
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+
+# Mac-specifika filer
+.DS_Store
+.AppleDouble
+.LSOverride
+
+
+# Linux-specifika filer
+*~
+
+
+# Git-specifika filer
+!.gitignore
+
+
+# Rider/JetBrains-specifika filer
+.idea/
+*.sln.iml
+*.iml
+.idea_modules/
+.idea/gradle.xml
+.idea/misc.xml
+.idea/runConfigurations/
+.idea/workspace.xml
+*.iws
+
+
+# Lokala inställningar och cache
+*.swp
+*.swo
+*.bak
+*.orig
+
+# Angular
+.angular/
