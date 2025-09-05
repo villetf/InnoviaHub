@@ -1,4 +1,7 @@
+using backend.Hubs;
 using backend.Models;
+using backend.Models.Interfaces;
+using backend.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +23,12 @@ builder.Services.AddCors(opt => {
    });
 });
 
+builder.Services.AddSignalR();
+
+//DI för repositories
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
+
 var app = builder.Build();
 
 app.UseCors();
@@ -35,5 +44,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<BookingHub>("/hubs/bookings");
 
 app.Run();
