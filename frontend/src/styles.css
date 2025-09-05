@@ -18,36 +18,49 @@
   --color-dark-warning: #ff9f70; /* orange-salmon för warning */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-primary: var(--color-dark-primary);
-    --color-primary-dark: var(--color-dark-primary-dark);
-    --color-highlight: var(--color-dark-highlight);
-    --color-bg: var(--color-dark-bg);
-    --color-bg-alt: var(--color-dark-bg-alt);
-    --color-text: var(--color-dark-text);
-    --color-heading: var(--color-dark-heading);
-    --color-link: var(--color-dark-link);
-    --color-border: var(--color-dark-border);
-    --color-success: var(--color-dark-success);
-    --color-error: var(--color-dark-error);
-    --color-warning: var(--color-dark-warning);
-  }
+[data-theme="dark"] {
+  --color-primary: var(--color-dark-primary);
+  --color-primary-dark: var(--color-dark-primary-dark);
+  --color-highlight: var(--color-dark-highlight);
+  --color-bg: var(--color-dark-bg);
+  --color-bg-alt: var(--color-dark-bg-alt);
+  --color-text: var(--color-dark-text);
+  --color-heading: var(--color-dark-heading);
+  --color-link: var(--color-dark-link);
+  --color-border: var(--color-dark-border);
+  --color-success: var(--color-dark-success);
+  --color-error: var(--color-dark-error);
+  --color-warning: var(--color-dark-warning);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-primary: #ff7e70; /* salmon */
-    --color-primary-dark: #cc6258; /* mörkare salmon */
-    --color-highlight: #ff998d; /* ljusare salmon */
-    --color-bg: #fff4f2; /* väldigt ljus salmon bakgrund */
-    --color-bg-alt: #ffe0dc; /* blek salmon alt */
-    --color-text: #1a0f0d; /* nästan svart-röd text */
-    --color-heading: #331f1c; /* mörk rubrik */
-    --color-link: #ff7e70; /* salmon länkar */
-    --color-border: #ffb5aa; /* ljus salmon kant */
-    --color-success: #ff998d; /* ljus salmon success */
-    --color-error: #ff4c33; /* röd-salmon error */
-    --color-warning: #ff9f70; /* orange-salmon warning */
-  }
+[data-theme="light"] {
+  --color-primary: #ff7e70; /* salmon */
+  --color-primary-dark: #cc6258; /* mörkare salmon */
+  --color-highlight: #ff998d; /* ljusare salmon */
+  --color-bg: #fff4f2; /* väldigt ljus salmon bakgrund */
+  --color-bg-alt: #ffe0dc; /* blek salmon alt */
+  --color-text: #1a0f0d; /* nästan svart-röd text */
+  --color-heading: #331f1c; /* mörk rubrik */
+  --color-link: #ff7e70; /* salmon länkar */
+  --color-border: #ffb5aa; /* ljus salmon kant */
+  --color-success: #ff998d; /* ljus salmon success */
+  --color-error: #ff4c33; /* röd-salmon error */
+  --color-warning: #ff9f70; /* orange-salmon warning */
+}
+
+/* -------------- Tailwind Custom Theme -------------- */
+
+@theme {
+  --color-primary: #ff7e70; /* salmon */
+  --color-primary-dark: #cc6258; /* mörkare salmon */
+  --color-highlight: #ff998d; /* ljusare salmon */
+  --color-bg: #fff4f2; /* väldigt ljus salmon bakgrund */
+  --color-bg-alt: #ffe0dc; /* blek salmon alt */
+  --color-text: #1a0f0d; /* nästan svart-röd text */
+  --color-heading: #331f1c; /* mörk rubrik */
+  --color-link: #ff7e70; /* salmon länkar */
+  --color-border: #ffb5aa; /* ljus salmon kant */
+  --color-success: #ff998d; /* ljus salmon success */
+  --color-error: #ff4c33; /* röd-salmon error */
+  --color-warning: #ff9f70; /* orange-salmon warning */
 }
