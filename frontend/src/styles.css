@@ -1,6 +1,20 @@
 @import "tailwindcss";
 
 :root {
+  /* Light Theme Base */
+  --color-primary: #ff7e70; /* salmon */
+  --color-primary-dark: #cc6258; /* mörkare salmon */
+  --color-highlight: #ff998d; /* ljusare salmon */
+  --color-bg: #fff4f2; /* väldigt ljus salmon bakgrund */
+  --color-bg-alt: #ffe0dc; /* blek salmon alt */
+  --color-text: #1a0f0d; /* nästan svart-röd text */
+  --color-heading: #331f1c; /* mörk rubrik */
+  --color-link: #ff7e70; /* salmon länkar */
+  --color-border: #ffb5aa; /* ljus salmon kant */
+  --color-success: #ff998d; /* ljus salmon success */
+  --color-error: #ff4c33; /* röd-salmon error */
+  --color-warning: #ff9f70; /* orange-salmon warning */
+
   /* Dark Theme Base */
   --color-dark-primary: #ff7e70; /* salmon */
   --color-dark-primary-dark: #cc6258; /* mörkare salmon */
@@ -63,4 +77,8 @@
   --color-success: #ff998d; /* ljus salmon success */
   --color-error: #ff4c33; /* röd-salmon error */
   --color-warning: #ff9f70; /* orange-salmon warning */
+}
+
+body {
+  font-family: "Roboto", sans-serif;
 }

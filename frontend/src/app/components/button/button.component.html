@@ -1,0 +1,13 @@
+<button
+  [type]="type()"
+  [class]="cssClasses()"
+  [style.backgroundColor]="
+    buttonStyle() === 'outlined' ? 'transparent' : bgColor()
+  "
+  [style.border]="'solid 1px ' + bgColor()"
+  [style.color]="textColor"
+  [disabled]="disabled()"
+  (click)="handleClick($event)"
+>
+  {{ label() }}
+</button>
