@@ -12,7 +12,23 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("innoviahub"));
+// För att använda inMemory-databas, sätt useInMemory till true
+var useInMemory = false;
+
+if (useInMemory)
+{
+   builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("innoviahub"));
+}
+else
+{
+   var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+   builder.Services.AddDbContext<AppDbContext>(options =>
+      options.UseMySql(
+         connectionString,
+         ServerVersion.AutoDetect(connectionString))
+      );
+}
+
 
 builder.Services.AddCors(opt => {
    opt.AddDefaultPolicy(policy => 
