@@ -1,6 +1,22 @@
 @import "tailwindcss";
 
 :root {
+  --color-page-margin-bg: #ffe0dc;
+
+  /* Menubar Settings */
+  --color-menu-bg: #ffe0dc;
+  --color-icon: #49454f;
+  --color-icon-active: #993f3b;
+  --color-menu-label-acitve: #cc6258;
+  --color-icon-hover: #ece6ee;
+
+  --menubar-desktop-width: 100px;
+  --menubar-mobile-height: 85px;
+
+  /* Page Margin */
+  --page-margin-desktop: 1.5rem;
+  --page-margin-mobile: 1rem;
+
   /* Light Theme Base */
   --color-primary: #ff7e70; /* salmon */
   --color-primary-dark: #cc6258; /* mörkare salmon */
@@ -79,6 +95,17 @@
   --color-warning: #ff9f70; /* orange-salmon warning */
 }
 
+html,
 body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
   font-family: "Roboto", sans-serif;
+}
+
+img {
+  width: 100%;
+  height: 100%;
 }
