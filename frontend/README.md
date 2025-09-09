@@ -41,6 +41,11 @@ ng generate --help
 ## Folder Structure Example
 
 ```bash
+/public
+├── assets
+│ │
+│ ├── icons
+│ └── images
 /src
 ├── app
 │ │
