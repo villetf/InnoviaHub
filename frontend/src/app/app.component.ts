@@ -1,5 +1,11 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 
 @Component({
@@ -9,5 +15,5 @@ import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'InnoviaHub';
 }
