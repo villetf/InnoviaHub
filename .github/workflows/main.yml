@@ -21,7 +21,7 @@ jobs:
       - name: Move project to target directory
         run: |
           TARGET_DIR="/var/www/innoviahub/backend"
-          cp -r ./publish/* "$TARGET_DIR"
+          cp -r ./publish/ "$TARGET_DIR"
 
       - name: Restart innoviahub.service
         run: |
