@@ -1,0 +1,26 @@
+name: Deploy and Restart Service
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Publish project
+        run: dotnet publish backend/backend.csproj -c Release -o publish
+
+      - name: Move project to target directory
+        run: |
+          TARGET_DIR="/var/www/innoviahub/backend"
+          cp -r ./publish/ "$TARGET_DIR"
+
+      - name: Restart innoviahub.service
+        run: |
+          systemctl restart innoviahub.service
