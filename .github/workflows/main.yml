@@ -25,4 +25,4 @@ jobs:
 
       - name: Restart innoviahub.service
         run: |
-          systemctl restart innoviahub.service
+          sudo systemctl restart innoviahub.service
