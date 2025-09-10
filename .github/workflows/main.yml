@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
 
       - name: Publish project
         run: dotnet publish backend/backend.csproj -c Release -o publish
