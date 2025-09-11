@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // För att använda inMemory-databas, sätt useInMemory till true
-var useInMemory = true;
+var useInMemory = false;
 
 if (useInMemory)
 {
@@ -31,12 +31,12 @@ else
 
 
 builder.Services.AddCors(opt => {
-   opt.AddDefaultPolicy(policy => 
-   {
-      policy.AllowAnyHeader();
-      policy.AllowAnyMethod();
-      policy.AllowAnyOrigin();
-   });
+   opt.AddPolicy("ng", p => p
+      .WithOrigins("http://localhost:4200")
+      .AllowAnyHeader()
+      .AllowAnyMethod()
+      .AllowCredentials()
+   );
 });
 
 builder.Services.AddSignalR();
@@ -47,15 +47,18 @@ builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 
 var app = builder.Build();
 
-app.UseCors();
+app.UseCors("ng");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
    app.MapOpenApi();
 }
+else
+{
+   app.UseHttpsRedirection();
+}
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
