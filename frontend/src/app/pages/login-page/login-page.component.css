@@ -1,0 +1,79 @@
+.login-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-page__logo {
+  font-family: "Inter", sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  margin-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo__row-one,
+.logo__row-two {
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.logo__row-one {
+  color: var(--color-text);
+}
+
+.logo__row-two {
+  color: var(--color-primary-dark);
+}
+
+.login-page__form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  width: 310px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 0 1.5rem;
+}
+
+.form__email,
+.form__password {
+  position: relative;
+}
+
+.form input {
+  width: 100%;
+  border: 1px solid var(--color-form-border);
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.form input::placeholder,
+.form label {
+  color: #747474;
+}
+
+.form label {
+  position: absolute;
+  top: -22%;
+  left: 5%;
+  padding: 2px 4px;
+  font-size: 12px;
+  color: var(--color-form-border);
+  background-color: var(--color-form-label-bg);
+}
+
+.form__actions {
+  display: flex;
+  justify-content: space-between;
+}
