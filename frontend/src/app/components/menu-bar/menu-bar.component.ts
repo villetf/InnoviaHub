@@ -1,18 +1,14 @@
 import { Component, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, MenuBarComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  selector: 'app-menu-bar',
+  imports: [RouterLink],
+  templateUrl: './menu-bar.component.html',
+  styleUrl: './menu-bar.component.css',
 })
-export class AppComponent {
-  title = 'InnoviaHub';
-
+export class MenuBarComponent {
   currentRoute = signal<string>('');
 
   constructor(private router: Router) {

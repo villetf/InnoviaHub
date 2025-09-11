@@ -1,7 +1,12 @@
-<h1 class="px-4 py-4 text-2xl font-bold">Resursbokning</h1>
+<div class="app-container">
+  <main class="main">
+    <!-- <h1 class="px-4 py-4 text-2xl font-bold">Resursbokning</h1> -->
+    <router-outlet></router-outlet>
+  </main>
 
-<!-- Vår menykomponent -->
-<app-resource-type-menu></app-resource-type-menu>
-
-<!-- Om du använder routing -->
-<router-outlet></router-outlet>
+  @if (currentRoute() !== '/logga-in' && currentRoute() !== '/registrera') {
+  <div class="sidebar">
+    <app-menu-bar></app-menu-bar>
+  </div>
+  }
+</div>
