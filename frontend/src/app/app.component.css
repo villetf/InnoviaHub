@@ -12,8 +12,10 @@
 }
 
 .main__inner {
-  padding: var(--page-margin-mobile) var(--page-margin-mobile)
-    var(--menubar-mobile-height) var(--page-margin-mobile);
+  /* padding: var(--page-margin-mobile) var(--page-margin-mobile)
+    var(--menubar-mobile-height) var(--page-margin-mobile); */
+  padding: var(--page-margin-mobile);
+  height: 100%;
 }
 
 .sidebar {
@@ -31,9 +33,9 @@
   }
 
   .main {
-    margin-left: var(--menubar-desktop-width);
+    /* margin-left: var(--menubar-desktop-width); */
     padding-bottom: 0;
-    background-color: var(--color-page-margin-bg);
+    /* background-color: var(--color-page-margin-bg); */
   }
 
   .main__inner {

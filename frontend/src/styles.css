@@ -3,6 +3,10 @@
 :root {
   --color-page-margin-bg: #ffe0dc;
 
+  /* Form */
+  --color-form-border: #767676;
+  --color-form-label-bg: #fff;
+
   /* Menubar Settings */
   --color-menu-bg: #ffe0dc;
   --color-icon: #49454f;
