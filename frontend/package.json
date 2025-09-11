@@ -20,12 +20,13 @@
     "@angular/platform-server": "^19.2.0",
     "@angular/router": "^19.2.0",
     "@angular/ssr": "^19.2.15",
+    "@microsoft/signalr": "^9.0.6",
     "@tailwindcss/postcss": "^4.1.12",
     "express": "^4.18.2",
     "postcss": "^8.5.6",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.1.12",
-    "tslib": "^2.3.0",
+    "tslib": "^2.8.1",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
