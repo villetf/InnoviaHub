@@ -1,0 +1,12 @@
+.not-found__title {
+  font-size: 1.5rem;
+}
+
+.not-found__text {
+  margin-bottom: 1rem;
+}
+
+.not-found__return {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+}
