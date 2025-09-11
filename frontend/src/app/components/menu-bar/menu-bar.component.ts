@@ -1,10 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterLink,
-} from '@angular/router';
+import { Component, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs';
 
 @Component({
