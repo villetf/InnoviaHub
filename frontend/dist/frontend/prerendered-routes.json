@@ -1,0 +1,7 @@
+{
+  "routes": {
+    "/InnoviaHub/boka": {},
+    "/InnoviaHub/profil": {},
+    "/InnoviaHub/sensorer": {}
+  }
+}
