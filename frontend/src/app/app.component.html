@@ -3,7 +3,8 @@
     <router-outlet></router-outlet>
   </main>
 
-  @if (currentRoute() !== '/logga-in' && currentRoute() !== '/registrera') {
+  @if (currentRoute() === '/profil' || currentRoute() === '/boka' ||
+  currentRoute() === '/sensorer') {
   <div class="sidebar">
     <app-menu-bar></app-menu-bar>
   </div>
