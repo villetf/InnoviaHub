@@ -9,3 +9,54 @@
   </div>
   }
 </div>
+
+<div class="container">
+  <!-- Authentication Section -->
+  <div class="auth-section">
+    <div *ngIf="!isAuthenticated" class="login-section">
+      <h2>Welcome to InnoviaHub</h2>
+      <p>Please log in to access the application</p>
+      <button 
+        type="button" 
+        class="login-btn"
+        (click)="login()">
+        Login with Microsoft
+      </button>
+    </div>
+
+    <div *ngIf="isAuthenticated" class="user-section">
+      <div class="user-info">
+        <span>Welcome, {{ userName }}!</span>
+        <button 
+          type="button" 
+          class="logout-btn"
+          (click)="logout()">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Application Content (only show when authenticated) -->
+  <div *ngIf="isAuthenticated" class="main-content">
+    <h1>{{ title }}</h1>
+    <p>You are successfully authenticated!</p>
+    
+    <div class="date-picker-section">
+      <h2>Test Date Picker Component</h2>
+      
+      <app-date-picker 
+        label="Select a Date"
+        placeholder="Choose your date"
+        (dateChange)="onDateSelected($event)">
+      </app-date-picker>
+      
+      <div *ngIf="selectedDate" class="selected-date">
+        <strong>Selected Date:</strong> {{ selectedDate | date:'fullDate' }}
+      </div>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
+
