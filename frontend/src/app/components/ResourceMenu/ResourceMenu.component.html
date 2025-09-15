@@ -13,15 +13,15 @@
         role="tab"
         [attr.aria-selected]="t.id === selectedTypeId"
         (click)="selectType(t.id)"
-        class="inline-flex items-center gap-1 px-4 py-4 text-sm mx-1 transition border"
+        class="inline-flex items-center gap-1 px-4 py-4 text-sm mx-1 transition border bg-highlight text-primary-dark-alt"
         [ngClass]="{
-          'rounded-l-[30px] rounded-r-[6px] bg-highlight text-primary-dark-alt border-highlight mx-1 hover:bg-highlight/70':
+          'rounded-l-[30px] rounded-r-[6px] text-primary-dark-alt border-highlight mx-1 hover:bg-highlight/70':
             i === 0 && t.id !== selectedTypeId,
-          'bg-highlight rounded-r-[30px] rounded-l-[6px] text-primary-dark-alt border-highlight mx-1 hover:bg-highlight/70':
+          'rounded-r-[30px] rounded-l-[6px] text-primary-dark-alt border-highlight mx-1 hover:bg-highlight/70':
             last && t.id !== selectedTypeId,
           'bg-primary-dark text-white border-primary-dark shadow-sm rounded-full':
             t.id === selectedTypeId,
-          'bg-highlight text-primary-dark-alt border-highlight rounded-md mx-1 hover:bg-highlight/70':
+          'text-primary-dark-alt border-highlight rounded-md mx-1 hover:bg-highlight/70':
             t.id !== selectedTypeId && i !== 0 && !last
         }"
       >
