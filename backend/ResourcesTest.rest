@@ -1,0 +1,13 @@
+### GET alla typer
+GET http://localhost:5184/api/resourcetype
+Accept: application/json
+
+###
+### GET resurser för typ
+GET http://localhost:5184/api/resource?typeId=1
+Accept: application/json
+
+###
+### Kontrollera tillgänglighet
+GET http://localhost:5184/api/resource?typeId=1&start=2025-09-06T10:00:00Z&end=2025-09-06T11:00:00Z
+Accept: application/json

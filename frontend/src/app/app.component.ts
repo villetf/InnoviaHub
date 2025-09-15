@@ -1,12 +1,27 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
+import { filter } from 'rxjs';
+import { ResourceTypeMenuComponent } from './components/ResourceMenu/ResourceMenu.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, MenuBarComponent, ResourceTypeMenuComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'InnoviaHub';
+
+  currentRoute = signal<string>('');
+
+  constructor(private router: Router) {
+    // Hämta och spara nuvarande route
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.currentRoute.set(event.url);
+      });
+  }
 }

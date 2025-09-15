@@ -1,0 +1,49 @@
+<div class="non-protected-page-container">
+  <div class="login-page__logo">
+    <span class="logo__row-one">Innovia</span>
+    <span class="logo__row-two">HUB</span>
+  </div>
+  <div class="login-page__form">
+    <form class="form" [formGroup]="loginForm">
+      <div class="form__email">
+        <label for="email">E-post</label>
+        <input
+          type="text"
+          formControlName="email"
+          id="email"
+          name="email"
+          placeholder="E-post"
+        />
+      </div>
+      <div class="form__password">
+        <label for="password">Lösenord</label>
+        <input
+          type="password"
+          formControlName="password"
+          id="password"
+          name="email"
+          placeholder="Lösenord"
+        />
+      </div>
+      <div class="form__actions">
+        <a routerLink="/registrera">
+          <app-button
+            type="button"
+            label="Skapa konto"
+            buttonStyle="outlined"
+            borderRadius="br-full-left"
+            bgColor="var(--color-text)"
+            textColor="var(--color-text)"
+          ></app-button>
+        </a>
+        <app-button
+          type="submit"
+          [disabled]="!loginForm.valid"
+          label="Logga in"
+          bgColor="var(--color-primary-dark)"
+          (onClick)="handleLogin()"
+        ></app-button>
+      </div>
+    </form>
+  </div>
+</div>

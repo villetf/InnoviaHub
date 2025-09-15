@@ -1,0 +1,26 @@
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+}
+
+.main {
+  height: 100%;
+}
+
+.sidebar {
+  width: 100%;
+  height: calc(var(--menubar-mobile-height) + var(--page-margin-mobile));
+  padding: var(--page-margin-mobile);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    width: var(--menubar-desktop-width);
+    padding: 0;
+    height: 100vh;
+  }
+}

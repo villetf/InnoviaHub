@@ -1,0 +1,21 @@
+.registration-page__message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+}
+
+.message__title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.message__text {
+  margin-bottom: 2rem;
+}
+
+.message__login a {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+}
