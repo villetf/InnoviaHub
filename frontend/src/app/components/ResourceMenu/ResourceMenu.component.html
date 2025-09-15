@@ -116,6 +116,11 @@
           (click)="selectResource(r.id)"
           class="flex items-center justify-between flex-wrap gap-y-1 sm:flex-row rounded-xl border border-border bg-white p-3 shadow-sm"
           id="{{ r.id }}"
+          [ngClass]="
+            r.id === selectedResourceId
+              ? 'ring-2 ring-primary border-primary'
+              : 'border-border hover:bg-bg-alt'
+          "
         >
           <div class="font-semibold text-heading">
             {{ r.name }}
