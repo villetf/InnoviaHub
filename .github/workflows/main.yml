@@ -26,7 +26,8 @@ jobs:
       - name: Move frontend project to target directory
         run: |
           TARGET_DIR="/var/www/innoviahub/frontend"
-          cp -r frontend/ "$TARGET_DIR"
+          cp -r frontend/* "$TARGET_DIR"
+          cd "$TARGET_DIR" && sudo npm install
 
       - name: Restart innoviahub.service
         run: |
