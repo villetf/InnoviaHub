@@ -75,11 +75,25 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.msalService.instance.getAllAccounts().length > 0;
+    try {
+      const accounts = this.msalService.instance.getAllAccounts();
+      console.log('🔍 Checking login status, accounts:', accounts);
+      return accounts.length > 0;
+    } catch (error) {
+      console.error('❌ Error checking login status:', error);
+      return false;
+    }
   }
 
   getActiveAccount() {
-    return this.msalService.instance.getActiveAccount();
+    try {
+      const activeAccount = this.msalService.instance.getActiveAccount();
+      console.log('🔍 Getting active account:', activeAccount);
+      return activeAccount;
+    } catch (error) {
+      console.error('❌ Error getting active account:', error);
+      return null;
+    }
   }
 
   getUserName(): string {

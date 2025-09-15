@@ -1,12 +1,10 @@
-import { Component, OnInit, OnDestroy,signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { AuthService } from './services/auth.service';
-import { MsalService, MsalBroadcastService } from '@azure/msal-angular';
-import { Subject, filter, takeUntil } from 'rxjs';
-import { EventMessage, EventType } from '@azure/msal-browser';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -14,21 +12,17 @@ import { EventMessage, EventType } from '@azure/msal-browser';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
   title = 'InnoviaHub';
   selectedDate: Date | null = null;
-  isAuthenticated = false;
-  userName = '';
-  private readonly _destroying$ = new Subject<void>();
+  isAuthenticated = false; // Keep this for the template logic
   showDebugLink = true; // Azure debug component visibility
   
   currentRoute = signal<string>('');
 
   constructor(
     private router: Router,
-    private authService: AuthService,
-    private msalService: MsalService,
-    private msalBroadcastService: MsalBroadcastService
+    private authService: AuthService
   ) {
     // Hämta och spara nuvarande route
     this.router.events
@@ -37,47 +31,8 @@ export class AppComponent implements OnInit, OnDestroy {
         this.currentRoute.set(event.url);
       });
       
-  }
-   ngOnInit(): void {
-    // Check if user is already logged in
-    this.checkAuthentication();
-
-    // Listen for authentication state changes
-    this.msalBroadcastService.msalSubject$
-      .pipe(
-        filter((msg: EventMessage) => 
-          msg.eventType === EventType.LOGIN_SUCCESS || 
-          msg.eventType === EventType.LOGOUT_SUCCESS ||
-          msg.eventType === EventType.ACQUIRE_TOKEN_SUCCESS
-        ),
-        takeUntil(this._destroying$)
-      )
-      .subscribe(() => {
-        this.checkAuthentication();
-      });
-  }
-
-  ngOnDestroy(): void {
-    this._destroying$.next(undefined);
-    this._destroying$.complete();
-  }
-
-  private checkAuthentication(): void {
+    // Check authentication status
     this.isAuthenticated = this.authService.isLoggedIn();
-    if (this.isAuthenticated) {
-      this.userName = this.authService.getUserName();
-    }
-  }
-
-  login(): void {
-    console.log('🖱️ Login button clicked');
-    console.log('🖱️ Auth service:', this.authService);
-    this.authService.login();
-  }
-
-  logout(): void {
-    console.log('🖱️ Logout button clicked');
-    this.authService.logout();
   }
 
   onDateSelected(date: Date | null): void {
