@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { ResourceTypeMenuComponent } from '../../components/ResourceMenu/ResourceMenu.component';
-import { BookingHubService } from '../../components/ResourceMenu/Services/bookingHubService.service';
+import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
 
 @Component({
   selector: 'app-booking-page',
-  imports: [ResourceTypeMenuComponent],
+  imports: [ResourceTypeMenuComponent, DatePickerComponent],
   templateUrl: './booking-page.component.html',
   styleUrl: './booking-page.component.css',
 })

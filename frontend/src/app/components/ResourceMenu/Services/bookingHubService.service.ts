@@ -1,16 +1,12 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import * as signalR from '@microsoft/signalr';
-import { AppConfigService } from '../../../core/app-config.service';
 
 @Injectable({ providedIn: 'root' })
 export class BookingHubService {
   private hub?: signalR.HubConnection;
 
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
-    private cfg: AppConfigService
-  ) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   async start(): Promise<void> {
     //kör bara i browser, inte under SSR
@@ -18,7 +14,7 @@ export class BookingHubService {
     if (this.hub) return;
 
     this.hub = new signalR.HubConnectionBuilder()
-      .withUrl(this.cfg.hubUrl, {
+      .withUrl('http://localhost:5184/hubs/bookings', {
         transport: signalR.HttpTransportType.WebSockets,
         skipNegotiation: true,
         //withCredentials: false
@@ -27,7 +23,7 @@ export class BookingHubService {
       .build();
 
     await this.hub.start();
-    console.log('SignalR connected', this.cfg.hubUrl);
+    console.log('SignalR connected');
   }
 
   onCreated(cb: (b: any) => void) {
