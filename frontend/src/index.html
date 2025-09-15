@@ -6,6 +6,30 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    
+    <!-- Cross-Origin policies för Azure Entra ID -->
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups" />
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="unsafe-none" />
+    
+    <!-- Azure Entra ID-kompatibel Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      connect-src 'self' 
+        https://login.microsoftonline.com 
+        https://graph.microsoft.com 
+        https://*.microsoftonline.com
+        http://localhost:5184 
+        http://localhost:4200
+        ws://localhost:*
+        wss://localhost:*;
+      img-src 'self' data: https:;
+      font-src 'self' data: https://fonts.gstatic.com https://fonts.googleapis.com;
+      frame-src https://login.microsoftonline.com https://*.microsoftonline.com;
+      object-src 'none';
+    ">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

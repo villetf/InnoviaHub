@@ -20,7 +20,8 @@ export class AppComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   userName = '';
   private readonly _destroying$ = new Subject<void>();
-
+  showDebugLink = true; // Azure debug component visibility
+  
   currentRoute = signal<string>('');
 
   constructor(
@@ -69,10 +70,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   login(): void {
+    console.log('🖱️ Login button clicked');
+    console.log('🖱️ Auth service:', this.authService);
     this.authService.login();
   }
 
   logout(): void {
+    console.log('🖱️ Logout button clicked');
     this.authService.logout();
   }
 

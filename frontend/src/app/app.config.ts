@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { 
@@ -21,6 +21,12 @@ export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication(msalConfig);
 }
 
+export function initializeMsal(msalService: MsalService): () => Promise<void> {
+  return () => {
+    return msalService.instance.initialize();
+  };
+}
+
 export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Popup,
@@ -34,6 +40,7 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   return {
     interactionType: InteractionType.Popup,
     protectedResourceMap: new Map([
+      [protectedResources.graphApi.endpoint, protectedResources.graphApi.scopes],
       [protectedResources.innoviaApi.endpoint, protectedResources.innoviaApi.scopes]
     ])
   };
@@ -60,6 +67,12 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MSAL_INTERCEPTOR_CONFIG,
       useFactory: MSALInterceptorConfigFactory
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeMsal,
+      deps: [MsalService],
+      multi: true
     },
     MsalService,
     MsalGuard,

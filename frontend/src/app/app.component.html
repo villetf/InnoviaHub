@@ -60,3 +60,9 @@
   <router-outlet></router-outlet>
 </div>
 
+<div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999;" *ngIf="showDebugLink">
+    <a href="/azure-debug" 
+       style="background: #007acc; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 12px;">
+       🔧 Azure Debug
+    </a>
+  </div>

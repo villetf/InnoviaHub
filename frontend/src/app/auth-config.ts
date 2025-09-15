@@ -40,13 +40,17 @@ export const msalConfig: Configuration = {
 };
 
 export const loginRequest: PopupRequest = {
-  scopes: ['api://3933fee6-215f-4c6b-a343-53eb1ac968c4/access_as_user'],
+  scopes: ['user.read', 'openid', 'profile'],
   prompt: 'select_account'
 };
 
 export const protectedResources = {
   innoviaApi: {
     endpoint: 'http://localhost:5184/api', // Din backend API URL
-    scopes: ['api://3933fee6-215f-4c6b-a343-53eb1ac968c4/access_as_user']
+    scopes: ['user.read']
+  },
+  graphApi: {
+    endpoint: 'https://graph.microsoft.com/v1.0/me',
+    scopes: ['user.read']
   }
 };
