@@ -1,6 +1,6 @@
 import { ApplicationConfig, importProvidersFrom, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, HTTP_INTERCEPTORS, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { 
   MsalModule, 
   MsalService, 
@@ -16,6 +16,10 @@ import {
 import { IPublicClientApplication, PublicClientApplication, InteractionType, BrowserCacheLocation } from '@azure/msal-browser';
 import { msalConfig, protectedResources } from './auth-config';
 import { routes } from './app.routes';
+import {
+  provideClientHydration,
+  withEventReplay,
+} from '@angular/platform-browser';
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication(msalConfig);
@@ -49,7 +53,8 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(),
+    provideClientHydration(withEventReplay()),
+    provideHttpClient(withInterceptorsFromDi(), withFetch()),
     importProvidersFrom(MsalModule),
     {
       provide: HTTP_INTERCEPTORS,

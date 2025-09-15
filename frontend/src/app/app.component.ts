@@ -5,10 +5,12 @@ import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { AuthService } from './services/auth.service';
 import { filter } from 'rxjs';
+import { ResourceTypeMenuComponent } from './components/ResourceMenu/ResourceMenu.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MenuBarComponent, DatePickerComponent, CommonModule],
+  standalone: true,
+  imports: [RouterOutlet, MenuBarComponent, DatePickerComponent, CommonModule, ResourceTypeMenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
