@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+require('dotenv').config();
 
 @Injectable({ providedIn: 'root' })
 export class AppConfigService {
