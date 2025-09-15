@@ -23,6 +23,15 @@ jobs:
           TARGET_DIR="/var/www/innoviahub/backend"
           cp -r ./publish/ "$TARGET_DIR"
 
+      - name: Movie frontend project to target directory
+        run: |
+          TARGET_DIR="/var/www/innoviahub/frontend"
+          cp -r /frontend/ "$TARGET_DIR"
+
       - name: Restart innoviahub.service
         run: |
           sudo systemctl restart innoviahub.service
+
+      - name: Restart innoviahub-frontend.service
+        run: |
+          sudo systemctl restart innoviahub-frontend.service
