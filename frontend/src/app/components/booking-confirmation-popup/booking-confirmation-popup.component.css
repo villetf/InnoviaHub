@@ -1,0 +1,35 @@
+.confirmation-popup {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  width: 320px;
+  padding: 1.5rem;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.confirmation-popup__message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.confirmation-popup__title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.confirmation-popup__text {
+}
+
+.confirmation-popup__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .confirmation-popup {
+    width: 400px;
+  }
+}

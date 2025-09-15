@@ -2,12 +2,11 @@ import { Component, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 import { filter } from 'rxjs';
-import { ResourceTypeMenuComponent } from './components/ResourceMenu/ResourceMenu.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MenuBarComponent, ResourceTypeMenuComponent],
+  imports: [RouterOutlet, MenuBarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
