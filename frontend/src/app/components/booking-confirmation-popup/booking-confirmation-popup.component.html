@@ -1,0 +1,23 @@
+<div class="confirmation-popup">
+  <div class="confirmation-popup__message">
+    <h1 class="confirmation-popup__title">Bekräfta bokning</h1>
+    <p class="confirmation-popup__text">Boka skrivbord för {{ localDate }}?</p>
+  </div>
+
+  <div class="confirmation-popup__actions">
+    <app-button
+      label="Avbryt"
+      size="small"
+      buttonStyle="outlined"
+      bgColor="var(--color-primary-dark)"
+      textColor="var(--color-primary-dark)"
+      (onClick)="handleCancelClick()"
+    ></app-button>
+    <app-button
+      label="Boka"
+      size="small"
+      bgColor="var(--color-primary-dark)"
+      (onClick)="handleBookClick()"
+    ></app-button>
+  </div>
+</div>
