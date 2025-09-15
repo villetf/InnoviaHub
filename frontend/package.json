@@ -1,6 +1,9 @@
 {
   "name": "frontend",
   "version": "0.0.0",
+  "engines": {
+    "node": ">=18.19 <21"
+  }
   "scripts": {
     "ng": "ng",
     "prestart": "node scripts/generate-env.js",
