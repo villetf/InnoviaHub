@@ -1,5 +1,7 @@
 <!-- WRAPPER -->
-<div class="mx-auto max-w-4xl h-full text-text md:relative">
+<div
+  class="mx-auto max-w-4xl h-full text-text md:relative md:h-[calc(100vh-32px-var(--menubar-mobile-height)-var(--page-margin-mobile)*2)] lg:h-full"
+>
   <h1 class="mb-4 text-2xl font-bold text-heading">Bokning</h1>
 
   <!-- MENY -->
@@ -113,6 +115,7 @@
         <div
           (click)="selectResource(r.id)"
           class="flex items-center justify-between flex-wrap gap-y-1 sm:flex-row rounded-xl border border-border bg-white p-3 shadow-sm"
+          id="{{ r.id }}"
         >
           <div class="font-semibold text-heading">
             {{ r.name }}
@@ -135,8 +138,18 @@
 
   <div
     id="bookButton"
-    class="flex justify-center items-center h-[calc(100vh-32px-var(--menubar-mobile-height)-var(--page-margin-mobile)*2)] md:h-auto md:absolute md:bottom-0 md:right-0"
+    class="flex justify-center items-center relative h-[calc(100vh-32px-var(--menubar-mobile-height)-var(--page-margin-mobile)*2)] md:h-auto md:absolute md:bottom-0 md:right-0"
   >
     <app-button label="Boka" (click)="handleClickBook()"></app-button>
+
+    <div class="absolute lg:-bottom-0.5 lg:-right-1">
+      <!-- Bekräftelse-Popup -->
+      @if (confirmationIsVisible) {
+      <app-booking-confirmation-popup
+        (buttonClicked)="receiveButtonClickedFromConfirmation($event)"
+        [selectedDate]="selectedDate"
+      ></app-booking-confirmation-popup>
+      }
+    </div>
   </div>
 </div>

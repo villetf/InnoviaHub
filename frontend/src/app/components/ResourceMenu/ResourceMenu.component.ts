@@ -12,11 +12,17 @@ import { ResourceService } from './Services/ResourceService.service';
 import { BookingHubService } from './Services/bookingHubService.service';
 import { DatePickerComponent } from '../date-picker/date-picker.component';
 import { ButtonComponent } from '../button/button.component';
+import { BookingConfirmationPopupComponent } from '../booking-confirmation-popup/booking-confirmation-popup.component';
 
 @Component({
   selector: 'app-resource-type-menu',
   standalone: true,
-  imports: [CommonModule, DatePickerComponent, ButtonComponent],
+  imports: [
+    CommonModule,
+    DatePickerComponent,
+    ButtonComponent,
+    BookingConfirmationPopupComponent,
+  ],
   templateUrl: './ResourceMenu.component.html',
 })
 export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
@@ -25,6 +31,7 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
 
   selectedDate: Date | null = null;
   selectedResourceId: number | null = null;
+  confirmationIsVisible: boolean = false;
 
   types: any[] = [];
   selectedTypeId?: number;
@@ -144,18 +151,24 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
 
   handleClickBook() {
     const screenWidth = this.getCurrentScreenWidth();
+
+    // Mobile
     if (screenWidth < 768) {
       if (!this.selectedTypeId) {
-        document.getElementById('resourceType')?.scrollIntoView();
+        return document.getElementById('resourceType')?.scrollIntoView();
       } else if (!this.selectedDate) {
-        document.getElementById('calendar')?.scrollIntoView();
+        return document.getElementById('calendar')?.scrollIntoView();
       } else if (!this.selectedResourceId) {
-        document.getElementById('resourceList')?.scrollIntoView();
+        return document.getElementById('resourceList')?.scrollIntoView();
       }
     }
 
-    console.log('ResourceTypeId: ', this.selectedResourceId);
-    console.log('SelectedDate: ', this.selectedDate);
+    // Desktop
+    if (!this.selectedTypeId || !this.selectedDate || !this.selectedResourceId)
+      return;
+
+    // Visa popup för bekräftelse
+    this.confirmationIsVisible = true;
   }
 
   receiveSelectedDateFromDatePicker(e: Date | null) {
@@ -170,5 +183,19 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
 
   getCurrentScreenWidth() {
     return window.innerWidth;
+  }
+
+  receiveButtonClickedFromConfirmation(e: string) {
+    if (e === 'cancel') {
+      this.confirmationIsVisible = false;
+    } else {
+      if (!this.selectedDate || !this.selectedResourceId) {
+        this.confirmationIsVisible = false;
+      } else {
+        // TODO: skicka datan till backend
+        console.log('ResourceTypeId: ', this.selectedResourceId);
+        console.log('SelectedDate: ', this.selectedDate);
+      }
+    }
   }
 }
