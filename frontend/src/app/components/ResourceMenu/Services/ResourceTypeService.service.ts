@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AppConfigService } from '../../../core/app-config.service';
 
 export interface ResourceType {
   id: number;
@@ -9,9 +10,11 @@ export interface ResourceType {
 
 @Injectable({ providedIn: 'root' })
 export class ResourceTypeService {
-  private baseUrl = 'http://localhost:5184/api/resourcetype';
+  private readonly baseUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cfg: AppConfigService) {
+    this.baseUrl = `${this.cfg.apiUrl}/api/resourcetype`;
+  }
 
   getAll(): Observable<ResourceType[]> {
     return this.http.get<ResourceType[]>(this.baseUrl);
