@@ -10,7 +10,11 @@ export class BookingHubService {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private cfg: AppConfigService
-  ) {}
+  ) {
+   console.log('i constructor')
+   console.log('hub', this.cfg.hubUrl);
+   console.log('api', this.cfg.apiUrl);
+  }
 
   async start(): Promise<void> {
     //kör bara i browser, inte under SSR
