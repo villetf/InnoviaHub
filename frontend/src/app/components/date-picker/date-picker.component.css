@@ -36,3 +36,7 @@
 .date-picker-input:hover:not(:disabled) {
   border-color: #9ca3af;
 }
+
+.date-picker-warning {
+  color: var(--color-warning);
+}
