@@ -113,7 +113,7 @@
         @for(r of resources; track r) {
 
         <div
-          (click)="selectResource(r.id)"
+          (click)="selectResource(r.id, r.name, r.isAvailable)"
           class="flex items-center justify-between flex-wrap gap-y-1 sm:flex-row rounded-xl border border-border bg-white p-3 shadow-sm"
           id="{{ r.id }}"
           [ngClass]="
@@ -153,6 +153,8 @@
       <app-booking-confirmation-popup
         (buttonClicked)="receiveButtonClickedFromConfirmation($event)"
         [selectedDate]="selectedDate"
+        [selectedResourceName]="selectedResourceName"
+        [bookingIsConfirmed]="isBooked"
       ></app-booking-confirmation-popup>
       }
     </div>
