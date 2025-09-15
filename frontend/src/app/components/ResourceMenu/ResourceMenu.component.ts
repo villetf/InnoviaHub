@@ -31,7 +31,9 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
 
   selectedDate: Date | null = null;
   selectedResourceId: number | null = null;
+  selectedResourceName: string | null = null;
   confirmationIsVisible: boolean = false;
+  isBooked: boolean = false;
 
   types: any[] = [];
   selectedTypeId?: number;
@@ -89,6 +91,8 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   }
 
   selectType(typeId: number) {
+    this.isBooked = false;
+    this.confirmationIsVisible = false;
     if (this.selectedTypeId === typeId) return;
     this.selectedTypeId = typeId;
     this.refreshResources();
@@ -138,9 +142,19 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
     this.refreshResources();
   }
 
-  selectResource(resourceId: number | null) {
+  selectResource(
+    resourceId: number | null,
+    name: string | null,
+    isAvailable: boolean
+  ) {
+    this.isBooked = false;
+    this.confirmationIsVisible = false;
+
+    if (isAvailable === false) return;
+
     if (!resourceId) return;
     this.selectedResourceId = resourceId;
+    this.selectedResourceName = name;
 
     // Scrolla ner till nästa steg(resurslista) i mobilläge
     const screenWidth = this.getCurrentScreenWidth();
@@ -172,6 +186,9 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   }
 
   receiveSelectedDateFromDatePicker(e: Date | null) {
+    this.isBooked = false;
+    this.confirmationIsVisible = false;
+
     this.selectedDate = e;
 
     // Scrolla ner till nästa steg(resurslista) i mobilläge
@@ -189,12 +206,12 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
     if (e === 'cancel') {
       this.confirmationIsVisible = false;
     } else {
-      if (!this.selectedDate || !this.selectedResourceId) {
-        this.confirmationIsVisible = false;
-      } else {
+      if (this.selectedDate && this.selectedResourceId) {
         // TODO: skicka datan till backend
         console.log('ResourceTypeId: ', this.selectedResourceId);
         console.log('SelectedDate: ', this.selectedDate);
+
+        this.isBooked = true;
       }
     }
   }
