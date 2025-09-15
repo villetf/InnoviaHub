@@ -23,10 +23,10 @@ jobs:
           TARGET_DIR="/var/www/innoviahub/backend"
           cp -r ./publish/ "$TARGET_DIR"
 
-      - name: Movie frontend project to target directory
+      - name: Move frontend project to target directory
         run: |
           TARGET_DIR="/var/www/innoviahub/frontend"
-          cp -r /frontend/ "$TARGET_DIR"
+          cp -r frontend/ "$TARGET_DIR"
 
       - name: Restart innoviahub.service
         run: |
