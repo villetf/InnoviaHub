@@ -10,16 +10,30 @@ import { Subscription, timer } from 'rxjs';
 import { ResourceTypeService } from './Services/ResourceTypeService.service';
 import { ResourceService } from './Services/ResourceService.service';
 import { BookingHubService } from './Services/bookingHubService.service';
+import { DatePickerComponent } from '../date-picker/date-picker.component';
+import { ButtonComponent } from '../button/button.component';
+import { BookingConfirmationPopupComponent } from '../booking-confirmation-popup/booking-confirmation-popup.component';
 
 @Component({
   selector: 'app-resource-type-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    DatePickerComponent,
+    ButtonComponent,
+    BookingConfirmationPopupComponent,
+  ],
   templateUrl: './ResourceMenu.component.html',
 })
 export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
   readonly isBrowser = isPlatformBrowser(this.platformId);
+
+  selectedDate: Date | null = null;
+  selectedResourceId: number | null = null;
+  selectedResourceName: string | null = null;
+  confirmationIsVisible: boolean = false;
+  isBooked: boolean = false;
 
   types: any[] = [];
   selectedTypeId?: number;
@@ -52,7 +66,7 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
             countAll: 0,
             countAvailable: 0,
           }));
-          if (this.types.length) this.selectType(this.types[0].id);
+          // if (this.types.length) this.selectType(this.types[0].id);
         },
         error: () => (this.error = 'Kunde inte hämta resurstyp-lista.'),
       })
@@ -67,9 +81,9 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
     });
 
     //Polling
-    this.subs.push(
-      timer(60000, 60000).subscribe(() => this.refreshResources())
-    );
+    // this.subs.push(
+    //   timer(60000, 60000).subscribe(() => this.refreshResources())
+    // );
   }
 
   ngOnDestroy(): void {
@@ -77,9 +91,17 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   }
 
   selectType(typeId: number) {
+    this.isBooked = false;
+    this.confirmationIsVisible = false;
     if (this.selectedTypeId === typeId) return;
     this.selectedTypeId = typeId;
     this.refreshResources();
+
+    // Scrolla ner till nästa steg(kalender) i mobilläge
+    const screenWidth = this.getCurrentScreenWidth();
+    if (screenWidth < 768) {
+      document.getElementById('calendar')?.scrollIntoView();
+    }
   }
 
   refreshResources() {
@@ -118,5 +140,79 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
     this.start = new Date();
     this.end = new Date(this.start.getTime() + hours * 3600_000);
     this.refreshResources();
+  }
+
+  selectResource(
+    resourceId: number | null,
+    name: string | null,
+    isAvailable: boolean
+  ) {
+    this.isBooked = false;
+    this.confirmationIsVisible = false;
+
+    if (isAvailable === false) return;
+
+    if (!resourceId) return;
+    this.selectedResourceId = resourceId;
+    this.selectedResourceName = name;
+
+    // Scrolla ner till nästa steg(resurslista) i mobilläge
+    const screenWidth = this.getCurrentScreenWidth();
+    if (screenWidth < 768) {
+      document.getElementById('bookButton')?.scrollIntoView();
+    }
+  }
+
+  handleClickBook() {
+    const screenWidth = this.getCurrentScreenWidth();
+
+    // Mobile
+    if (screenWidth < 768) {
+      if (!this.selectedTypeId) {
+        return document.getElementById('resourceType')?.scrollIntoView();
+      } else if (!this.selectedDate) {
+        return document.getElementById('calendar')?.scrollIntoView();
+      } else if (!this.selectedResourceId) {
+        return document.getElementById('resourceList')?.scrollIntoView();
+      }
+    }
+
+    // Desktop
+    if (!this.selectedTypeId || !this.selectedDate || !this.selectedResourceId)
+      return;
+
+    // Visa popup för bekräftelse
+    this.confirmationIsVisible = true;
+  }
+
+  receiveSelectedDateFromDatePicker(e: Date | null) {
+    this.isBooked = false;
+    this.confirmationIsVisible = false;
+
+    this.selectedDate = e;
+
+    // Scrolla ner till nästa steg(resurslista) i mobilläge
+    const screenWidth = this.getCurrentScreenWidth();
+    if (screenWidth < 768) {
+      document.getElementById('resourceList')?.scrollIntoView();
+    }
+  }
+
+  getCurrentScreenWidth() {
+    return window.innerWidth;
+  }
+
+  receiveButtonClickedFromConfirmation(e: string) {
+    if (e === 'cancel') {
+      this.confirmationIsVisible = false;
+    } else {
+      if (this.selectedDate && this.selectedResourceId) {
+        // TODO: skicka datan till backend
+        console.log('ResourceTypeId: ', this.selectedResourceId);
+        console.log('SelectedDate: ', this.selectedDate);
+
+        this.isBooked = true;
+      }
+    }
   }
 }
