@@ -3,8 +3,38 @@
     <span class="logo__row-one">Innovia</span>
     <span class="logo__row-two">HUB</span>
   </div>
+  
   <div class="login-page__form">
-    <form class="form" [formGroup]="loginForm">
+    <!-- Microsoft Login (Primär metod) -->
+    <div class="microsoft-login" *ngIf="!showTraditionalLogin">
+      <h2>Logga in med Microsoft</h2>
+      <p>Använd ditt Microsoft-konto för att komma åt InnoviaHub</p>
+      
+      <app-button
+        type="button"
+        [disabled]="isLoading"
+        [label]="isLoading ? 'Loggar in...' : 'Logga in med Microsoft'"
+        bgColor="var(--color-primary-dark)"
+        textColor="white"
+        (onClick)="loginWithMicrosoft()"
+      ></app-button>
+      
+      <div class="login-divider">
+        <span>eller</span>
+      </div>
+      
+      <button 
+        type="button" 
+        class="toggle-login-method"
+        (click)="toggleLoginMethod()">
+        Använd e-post och lösenord istället
+      </button>
+    </div>
+
+    <!-- Traditionell Login (Sekundär metod) -->
+    <form class="form" [formGroup]="loginForm" *ngIf="showTraditionalLogin">
+      <h2>Logga in med e-post</h2>
+      
       <div class="form__email">
         <label for="email">E-post</label>
         <input
@@ -21,7 +51,7 @@
           type="password"
           formControlName="password"
           id="password"
-          name="email"
+          name="password"
           placeholder="Lösenord"
         />
       </div>
@@ -44,6 +74,17 @@
           (onClick)="handleLogin()"
         ></app-button>
       </div>
+      
+      <div class="login-divider">
+        <span>eller</span>
+      </div>
+      
+      <button 
+        type="button" 
+        class="toggle-login-method"
+        (click)="toggleLoginMethod()">
+        Använd Microsoft-inloggning istället
+      </button>
     </form>
   </div>
 </div>
