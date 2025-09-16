@@ -13,6 +13,8 @@ import { BookingHubService } from './Services/bookingHubService.service';
 import { DatePickerComponent } from '../date-picker/date-picker.component';
 import { ButtonComponent } from '../button/button.component';
 import { BookingConfirmationPopupComponent } from '../booking-confirmation-popup/booking-confirmation-popup.component';
+import { BookingService } from './Services/booking.service';
+import { Booking } from './models/booking.model';
 
 @Component({
   selector: 'app-resource-type-menu',
@@ -34,6 +36,7 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   selectedResourceName: string | null = null;
   confirmationIsVisible: boolean = false;
   isBooked: boolean = false;
+  errorMessage: string = '';
 
   types: any[] = [];
   selectedTypeId?: number;
@@ -49,7 +52,8 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   constructor(
     private typeApi: ResourceTypeService,
     private resourceApi: ResourceService,
-    private hub: BookingHubService
+    private hub: BookingHubService,
+    private bookingApi: BookingService
   ) {}
 
   ngOnInit(): void {
@@ -91,8 +95,6 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   }
 
   selectType(typeId: number) {
-    this.isBooked = false;
-    this.confirmationIsVisible = false;
     if (this.selectedTypeId === typeId) return;
     this.selectedTypeId = typeId;
     this.refreshResources();
@@ -136,19 +138,18 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  setNowRange(hours = 1) {
-    this.start = new Date();
-    this.end = new Date(this.start.getTime() + hours * 3600_000);
-    this.refreshResources();
-  }
+  // setNowRange(hours = 1) {
+  //   this.start = new Date();
+  //   this.end = new Date(this.start.getTime() + hours * 3600_000);
+  //   this.refreshResources();
+  // }
 
   selectResource(
     resourceId: number | null,
     name: string | null,
     isAvailable: boolean
   ) {
-    this.isBooked = false;
-    this.confirmationIsVisible = false;
+    this.resetAllStates();
 
     if (isAvailable === false) return;
 
@@ -186,8 +187,7 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   }
 
   receiveSelectedDateFromDatePicker(e: Date | null) {
-    this.isBooked = false;
-    this.confirmationIsVisible = false;
+    this.resetAllStates();
 
     this.selectedDate = e;
 
@@ -202,17 +202,60 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
     return window.innerWidth;
   }
 
-  receiveButtonClickedFromConfirmation(e: string) {
+  async receiveButtonClickedFromConfirmation(e: string) {
     if (e === 'cancel') {
       this.confirmationIsVisible = false;
     } else {
       if (this.selectedDate && this.selectedResourceId) {
-        // TODO: skicka datan till backend
-        console.log('ResourceTypeId: ', this.selectedResourceId);
-        console.log('SelectedDate: ', this.selectedDate);
+        // TEMP tills funktionen för tidsval läggs till --------------------
+        const dateIso = this.selectedDate.toISOString();
 
-        this.isBooked = true;
+        const beginningOfDay = new Date(
+          dateIso.split('T')[0].concat('T00:00:00.000Z')
+        );
+        const endOfDay = new Date(
+          dateIso.split('T')[0].concat('T23:59:59.999Z')
+        );
+
+        // -----------------------------------------------------------------
+
+        const newBooking: Booking = {
+          // TODO: Riktig userId ska användas
+          userId: '11111111-1111-1111-1111-111111111111', // TEMP
+          resourceId: this.selectedResourceId,
+          startTime: beginningOfDay,
+          endTime: endOfDay,
+          status: 'Confirmed',
+        };
+
+        this.postNewBooking(newBooking);
       }
     }
+  }
+
+  postNewBooking(booking: Booking) {
+    this.bookingApi.postNewBooking(booking).subscribe(
+      (response) => {
+        // Om statusen är högre än 201 så stängs bekräftelse-popup
+        if (response.status > 201) return (this.confirmationIsVisible = false);
+
+        // Annars bekräftas bokningen (statuskod 200 eller 201)
+        return (this.isBooked = true);
+      },
+      (error: any) => {
+        console.error('Status code: ', error.status);
+
+        if (error.status === 409) {
+          this.errorMessage = `${this.selectedResourceName} är upptagen.`;
+          this.confirmationIsVisible = false;
+        }
+      }
+    );
+  }
+
+  resetAllStates() {
+    this.isBooked = false;
+    this.confirmationIsVisible = false;
+    this.errorMessage = '';
   }
 }

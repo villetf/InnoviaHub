@@ -141,6 +141,10 @@
     </section>
   </div>
 
+  @if (errorMessage) {
+  <div class="text-red-600">{{ errorMessage }}</div>
+  }
+
   <div
     id="bookButton"
     class="flex justify-center items-center relative h-[calc(100vh-32px-var(--menubar-mobile-height)-var(--page-margin-mobile)*2)] md:h-auto md:absolute md:bottom-0 md:right-0"
