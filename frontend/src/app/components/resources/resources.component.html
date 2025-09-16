@@ -1,0 +1,163 @@
+<div class="mx-auto max-w-5xl px-4 py-4 text-text">
+  <h1 class="mb-4 text-2xl font-bold text-heading">Resurser</h1>
+
+  <!-- Alert-rader -->
+  <div
+    *ngIf="error"
+    class="mb-3 rounded-md border border-error bg-error/10 text-error px-3 py-2 text-sm"
+  >
+    {{ error }}
+  </div>
+  <div
+    *ngIf="success"
+    class="mb-3 rounded-md border border-success bg-success/10 text-heading px-3 py-2 text-sm"
+  >
+    {{ success }}
+  </div>
+
+  <!-- Typväljare -->
+  <div class="mb-4 flex items-center gap-3">
+    <label class="text-sm text-heading">Resurstyp:</label>
+    <select
+      class="rounded-md border border-border bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
+      [ngModel]="selectedTypeId()"
+      (ngModelChange)="selectType($event)"
+    >
+      <option *ngFor="let t of types" [ngValue]="t.id">{{ t.name }}</option>
+    </select>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-12">
+    <!-- Lista -->
+    <section class="md:col-span-7 lg:col-span-8">
+      <div
+        *ngIf="loading"
+        class="rounded-lg border border-border bg-white p-3 text-sm text-heading/70"
+      >
+        Laddar resurser…
+      </div>
+
+      <div *ngIf="!loading" class="grid grid-cols-1 gap-2">
+        <div
+          *ngFor="let r of resources"
+          class="flex items-center justify-between rounded-xl border border-border bg-white p-3 shadow-sm"
+        >
+          <div>
+            <div class="font-semibold text-heading">{{ r.name }}</div>
+            <div class="text-xs opacity-70">
+              Typ: {{ r.resourceTypeName || "#" + r.resourceTypeId }}
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <app-button
+              label="Redigera"
+              [buttonStyle]="'outlined'"
+              [borderRadius]="'br-full'"
+              [bgColor]="'var(--color-border)'"
+              [textColor]="'var(--color-text)'"
+              (onClick)="startEdit(r)"
+            ></app-button>
+
+            <app-button
+              label="Ta bort"
+              [buttonStyle]="'filled'"
+              [borderRadius]="'br-full'"
+              [bgColor]="'var(--color-primary)'"
+              [textColor]="'#fff'"
+              (onClick)="delete(r)"
+            ></app-button>
+          </div>
+        </div>
+
+        <div *ngIf="!resources?.length" class="text-sm text-heading/70">
+          Inga resurser för vald typ.
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulär -->
+    <section class="md:col-span-5 lg:col-span-4">
+      <div class="rounded-xl border border-border bg-white p-4 shadow-sm">
+        <h2 class="mb-3 text-lg font-semibold text-heading">
+          {{ isEditing() ? "Redigera resurs" : "Skapa ny resurs" }}
+        </h2>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-3">
+          <div>
+            <label
+              class="mb-1 block text-sm font-medium text-heading"
+              for="name"
+              >Namn</label
+            >
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              class="w-full rounded-md border border-border bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
+              placeholder="t.ex. Skrivbord 3"
+            />
+            <div
+              class="mt-1 text-xs text-error"
+              *ngIf="form.controls.name.touched && form.controls.name.invalid"
+            >
+              Namn är obligatoriskt (2–80 tecken).
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="mb-1 block text-sm font-medium text-heading"
+              for="type"
+              >Resurstyp</label
+            >
+            <select
+              id="type"
+              formControlName="resourceTypeId"
+              class="w-full rounded-md border border-border bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option [ngValue]="null" disabled>Välj typ…</option>
+              <option *ngFor="let t of types" [ngValue]="t.id">
+                {{ t.name }}
+              </option>
+            </select>
+            <div
+              class="mt-1 text-xs text-error"
+              *ngIf="
+                form.controls.resourceTypeId.touched &&
+                form.controls.resourceTypeId.invalid
+              "
+            >
+              Du måste välja en resurstyp.
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center gap-3">
+            <app-button
+              [type]="'submit'"
+              [label]="isEditing() ? 'Spara ändringar' : 'Skapa resurs'"
+              [buttonStyle]="'filled'"
+              [borderRadius]="'br-full'"
+              [bgColor]="'var(--color-primary)'"
+              [textColor]="'#fff'"
+              [disabled]="form.invalid"
+            ></app-button>
+
+            <app-button
+              [label]="isEditing() ? 'Avbryt' : 'Rensa'"
+              [buttonStyle]="'outlined'"
+              [borderRadius]="'br-full'"
+              [bgColor]="'var(--color-border)'"
+              [textColor]="'var(--color-text)'"
+              (onClick)="
+                isEditing()
+                  ? cancelEdit()
+                  : form.reset({ name: '', resourceTypeId: selectedTypeId() })
+              "
+            ></app-button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+</div>
