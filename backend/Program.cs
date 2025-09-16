@@ -47,7 +47,7 @@ else
 
 builder.Services.AddCors(opt => {
    opt.AddPolicy("ng", p => p
-      .WithOrigins("http://localhost:4200")
+      .WithOrigins("http://localhost:4200", "https://innoviahub-app-6hrgl.ondigitalocean.app")
       .AllowAnyHeader()
       .AllowAnyMethod()
       .AllowCredentials()
