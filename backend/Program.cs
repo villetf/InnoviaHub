@@ -28,7 +28,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // För att använda inMemory-databas, sätt useInMemory till true
-var useInMemory = true;
+var useInMemory = false;
 
 if (useInMemory)
 {
@@ -82,3 +82,4 @@ app.MapControllers();
 app.MapHub<BookingHub>("/hubs/bookings");
 
 app.Run();
+
