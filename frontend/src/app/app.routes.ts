@@ -5,6 +5,7 @@ import { BookingPageComponent } from './pages/booking-page/booking-page.componen
 import { SensorPageComponent } from './pages/sensor-page/sensor-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
+import { AzureDebugComponent } from './components/azure-debug/azure-debug.component';
 
 export const routes: Routes = [
   { path: 'logga-in', component: LoginPageComponent },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'profil', component: ProfilePageComponent },
   { path: 'boka', component: BookingPageComponent },
   { path: 'sensorer', component: SensorPageComponent },
+  { path: 'azure-debug', component: AzureDebugComponent },
   { path: '', redirectTo: 'logga-in', pathMatch: 'full' },
   { path: '**', component: NotFoundPageComponent },
 ];
