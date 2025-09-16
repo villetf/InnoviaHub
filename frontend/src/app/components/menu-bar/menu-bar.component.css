@@ -91,3 +91,37 @@
     background-color: var(--color-icon-hover);
   }
 }
+
+/* Logout knapp styling */
+.menu-bar-list__item--logout {
+  margin-left: auto; /* Skjuter logout-knappen till höger */
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  color: inherit;
+}
+
+.logout-button:hover .menu-bar-list__icon {
+  background-color: var(--color-error, #ff6b6b);
+}
+
+.logout-button:hover .menu-bar-list__icon path {
+  fill: white;
+}
+
+.logout-button:hover .menu-bar-list__label {
+  color: var(--color-error, #ff6b6b);
+}
+
+/* Responsiv design för logout */
+@media (min-width: 1024px) {
+  .menu-bar-list__item--logout {
+    margin-left: 0;
+    margin-top: auto; /* Skjuter logout-knappen till botten i desktop-läge */
+  }
+}
