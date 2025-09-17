@@ -11,5 +11,5 @@ public interface IBookingRepository
     Task<bool> Delete(int id, CancellationToken ct = default);
 
     //Kolla om en bokning krockar med en som redan finns
-    Task<bool> HasOverlap(int resourceId, DateTime start, DateTime end, int? ignoreBookingId = null, CancellationToken ct = default);
+    //Task<bool> HasOverlap(int resourceId, DateTime start, DateTime end, int? ignoreBookingId = null, CancellationToken ct = default);
 }
