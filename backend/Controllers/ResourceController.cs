@@ -19,11 +19,11 @@ namespace backend.Controllers
             [FromQuery] DateTime? end,
             CancellationToken ct)
         {
-            if (typeId <= 0) return BadRequest("typeId krävs.");
+            if (typeId <= 0) return BadRequest(new {message = "typeId krävs."});
 
             var s = start ?? DateTime.UtcNow;
             var e = end   ?? DateTime.UtcNow;
-            if (e <= s) return BadRequest("end måste vara efter start.");
+            if (e <= s) return BadRequest(new {message = "end måste vara efter start."});
 
             //Hämta resurser av typen
             var resources = await _db.Resources
@@ -87,11 +87,11 @@ namespace backend.Controllers
             if(string.IsNullOrWhiteSpace(dto.Name))
                 return BadRequest("Namn krävs");
             if(dto.ResourceTypeId <= 0)
-                return BadRequest("Giltig ResourceTypeId krävs");
+                return BadRequest(new {message = "Giltig ResourceTypeId krävs"});
 
             //Kontrollera att resurstypen finns
             var typeExists = await _db.ResourceTypes.AnyAsync(t => t.Id == dto.ResourceTypeId, ct);
-            if(!typeExists) return BadRequest("Ogiltigt resourcetypeid");
+            if(!typeExists) return BadRequest(new {message = "Ogiltigt resourcetypeid"});
 
             var entity = new Resource
             {
@@ -122,11 +122,11 @@ namespace backend.Controllers
         public async Task<ActionResult<object>> Update(int id, [FromBody] ResourceUpdateDto dto, CancellationToken ct)
         {
             if (id <= 0) return BadRequest("Ogiltigt id");
-            if(string.IsNullOrWhiteSpace(dto.Name)) return BadRequest("Namn krävs");
-            if (dto.ResourceTypeId <= 0) return BadRequest("Giltigt resourcetypeid krävs");
+            if(string.IsNullOrWhiteSpace(dto.Name)) return BadRequest(new {message = "Namn krävs"});
+            if (dto.ResourceTypeId <= 0) return BadRequest(new { message = "Giltigt resourcetypeid krävs"});
 
             var typeExists = await _db.ResourceTypes.AnyAsync(t => t.Id == dto.ResourceTypeId, ct);
-            if (!typeExists) return BadRequest("Ogiltigt resourcetypeid");
+            if (!typeExists) return BadRequest(new { message = "Ogiltigt resourcetypeid"});
 
             var entity = await _db.Resources.FirstOrDefaultAsync(r => r.Id == id, ct);
             if(entity is null) return NotFound();
@@ -154,7 +154,7 @@ namespace backend.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
-            if(id <= 0) return BadRequest("Ogiltigt id");
+            if(id <= 0) return BadRequest(new {message = "Ogiltigt id"});
 
             var entity = await _db.Resources.FirstOrDefaultAsync(r => r.Id == id, ct);
             if(entity is null) return NotFound();
@@ -162,7 +162,7 @@ namespace backend.Controllers
             //Blockera radering om resursen har bokning
             var hasBooking = await _db.Bookings.AnyAsync(b => b.ResourceId == id, ct);
             if(hasBooking)
-                return Conflict("Resursen kan inte raderas pga att den har bokningar");
+                return Conflict(new { message = "Resursen kan inte raderas pga att den har bokningar"});
 
             _db.Resources.Remove(entity);
             await _db.SaveChangesAsync(ct);
