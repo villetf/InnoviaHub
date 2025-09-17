@@ -28,7 +28,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // För att använda inMemory-databas, sätt useInMemory till true
-var useInMemory = true;
+var useInMemory = false;
 
 if (useInMemory)
 {
@@ -47,7 +47,7 @@ else
 
 builder.Services.AddCors(opt => {
    opt.AddPolicy("ng", p => p
-      .WithOrigins("http://localhost:4200")
+      .WithOrigins("http://localhost:4200", "https://innoviahub-app-6hrgl.ondigitalocean.app")
       .AllowAnyHeader()
       .AllowAnyMethod()
       .AllowCredentials()
@@ -82,4 +82,5 @@ app.MapControllers();
 app.MapHub<BookingHub>("/hubs/bookings");
 
 app.Run();
+
 
