@@ -17,9 +17,6 @@ export class BookingHubService {
     if (!isPlatformBrowser(this.platformId)) return;
     if (this.hub) return;
 
-       console.log('i startare')
-      console.log('hub', this.cfg.hubUrl);
-      console.log('api', this.cfg.apiUrl);
     this.hub = new signalR.HubConnectionBuilder()
       .withUrl(this.cfg.hubUrl, {
         transport: signalR.HttpTransportType.WebSockets,

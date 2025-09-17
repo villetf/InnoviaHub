@@ -7,8 +7,8 @@ export const msalConfig: Configuration = {
   auth: {
     clientId: '3b2d7872-61e0-426e-ac3a-3803d77187b3', // Klient-ID
     authority: 'https://login.microsoftonline.com/57d13b38-9721-41f0-b8e4-bcc0183ad098',
-    redirectUri: 'http://localhost:4200',
-    postLogoutRedirectUri: 'http://localhost:4200'
+    redirectUri: window.__env?.NG_APP_LOGIN_REDIRECT_URL,
+    postLogoutRedirectUri: window.__env?.NG_APP_LOGOUT_REDIRECT_URL
   },
   cache: {
     cacheLocation: 'localStorage',
@@ -46,7 +46,7 @@ export const loginRequest: PopupRequest = {
 
 export const protectedResources = {
   innoviaApi: {
-    endpoint: 'http://localhost:5184/api', // Din backend API URL
+    endpoint: `${window.__env?.NG_APP_API_URL}/api`,
     scopes: ['user.read']
   },
   graphApi: {
