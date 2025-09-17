@@ -12,7 +12,11 @@
 
   <form *ngIf="booking" [formGroup]="form" class="space-y-4">
     <div>
-      <div class="text-xs uppercase tracking-wide opacity-70 mb-1">Tid</div>
+      <div
+        class="text-xs uppercase tracking-wide opacity-70 mb-1 text-[#993f3b]"
+      >
+        Start
+      </div>
       <div class="grid grid-cols-2 gap-3">
         <input
           type="date"
@@ -25,7 +29,12 @@
           class="rounded-md border border-border bg-white px-3 py-2"
         />
       </div>
-      <div class="grid grid-cols-2 gap-3 mt-2">
+      <div
+        class="text-xs uppercase tracking-wide opacity-70 mt-2 text-[#993f3b]"
+      >
+        Slut
+      </div>
+      <div class="grid grid-cols-2 gap-3 mt-1">
         <input
           type="date"
           formControlName="endDate"
@@ -49,7 +58,14 @@
         (onClick)="save()"
       ></app-button>
 
-      <button type="button" class="text-sm" (click)="remove()">Radera</button>
+      <app-button
+        label="Radera"
+        [buttonStyle]="'filled'"
+        [borderRadius]="'br-full'"
+        [bgColor]="'var(--color-highlight)'"
+        [textColor]="'#fff'"
+        (onClick)="remove()"
+      ></app-button>
     </div>
   </form>
 </div>

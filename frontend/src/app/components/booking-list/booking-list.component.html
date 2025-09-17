@@ -5,7 +5,9 @@
     <span class="text-lg">≡</span>
     <input
       class="flex-1 outline-none text-sm"
-      placeholder="Hinted search text"
+      placeholder="Sök bokning, resurs, användare eller id…"
+      [value]="search"
+      (input)="onSearchInput($any($event.target).value)"
     />
     <span class="text-lg">🔍</span>
   </div>

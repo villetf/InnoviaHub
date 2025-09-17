@@ -5,6 +5,8 @@
       [loading]="loading"
       [error]="error"
       [selectedId]="selectedId()"
+      [search]="search()"
+      (searchChange)="handleSearch($event)"
       (bookingSelected)="handleSelect($event)"
     ></app-booking-list>
   </div>
