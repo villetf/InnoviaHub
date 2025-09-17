@@ -1,0 +1,68 @@
+<!-- MENY -->
+<nav aria-label="Admin-sektioner" class="mb-5">
+  <!-- Desktop: PILLS -->
+  <div class="hidden md:flex flex-wrap">
+    <button
+      *ngFor="let t of tabs; let i = index; let last = last"
+      type="button"
+      role="tab"
+      [attr.aria-selected]="t.id === activeId"
+      (click)="changeTab.emit(t.id)"
+      class="inline-flex items-center gap-1 px-4 py-4 text-sm mx-1 transition border bg-highlight text-primary-dark-alt"
+      [ngClass]="{
+        'rounded-l-[30px] rounded-r-[6px] text-primary-dark-alt border-highlight mx-1 hover:bg-highlight/70':
+          i === 0 && t.id !== activeId,
+        'rounded-r-[30px] rounded-l-[6px] text-primary-dark-alt border-highlight mx-1 hover:bg-highlight/70':
+          last && t.id !== activeId,
+        'bg-primary-dark text-white border-primary-dark shadow-sm rounded-full':
+          t.id === activeId,
+        'text-primary-dark-alt border-highlight rounded-md mx-1 hover:bg-highlight/70':
+          t.id !== activeId && i !== 0 && !last
+      }"
+    >
+      <span>{{ t.label }}</span>
+
+      <!-- valfri badge med counts -->
+      <span
+        *ngIf="t.countAvailable != null && t.countAll != null"
+        class="rounded-full px-2 py-0.5 text-xs border"
+        [ngClass]="
+          t.id === activeId
+            ? 'border-white/40 text-white bg-white/10'
+            : 'border-border text-text bg-white/70'
+        "
+      >
+        {{ t.countAvailable }}/{{ t.countAll }}
+      </span>
+    </button>
+  </div>
+
+  <!-- Mobil: CARDS -->
+  <div class="grid gap-2 md:hidden">
+    <button
+      *ngFor="let t of tabs"
+      type="button"
+      (click)="changeTab.emit(t.id)"
+      class="flex items-center gap-3 rounded-xl border p-3 text-left transition bg-white shadow-sm"
+      [ngClass]="
+        t.id === activeId
+          ? 'ring-2 ring-primary border-primary'
+          : 'border-border hover:bg-bg-alt'
+      "
+    >
+      <span class="font-semibold text-heading">{{ t.label }}</span>
+
+      <span
+        *ngIf="t.countAvailable != null && t.countAll != null"
+        class="ml-auto inline-flex items-center rounded-full px-2 py-0.5 text-xs border"
+        [ngClass]="
+          t.id === activeId
+            ? 'border-primary text-primary'
+            : 'border-border text-text'
+        "
+      >
+        {{ t.countAvailable }}/{{ t.countAll }}
+      </span>
+    </button>
+  </div>
+</nav>

@@ -41,15 +41,15 @@ namespace backend.Controllers
         {
             //Vallidera tid
             if(dto.EndTime <= dto.StartTime)
-                return BadRequest("EndTime måste vara efter StartTime");
+                return BadRequest(new {message = "EndTime måste vara efter StartTime"});
 
             //Vallidera resurs
             var resource = await _resources.GetById(dto.ResourceId, ct);
-            if(resource is null) return BadRequest("Ogiltigt ResourceId");
+            if(resource is null) return BadRequest(new {message = "Ogiltigt ResourceId"});
 
             //Kolla krockar
-            if (await _bookings.HasOverlap(dto.ResourceId, dto.StartTime, dto.EndTime, null, ct))
-                return Conflict("Tiden krockar med en befintlig boking");
+            /*if (await _bookings.HasOverlap(dto.ResourceId, dto.StartTime, dto.EndTime, null, ct))
+                return Conflict("Tiden krockar med en befintlig boking");*/
 
             //Skapa bokning
             var booking = new Booking
@@ -71,15 +71,15 @@ namespace backend.Controllers
         {
             //Vallidera tid
             if(dto.EndTime <= dto.StartTime)
-                return BadRequest("EndTime måste vara efter StartTime");
+                return BadRequest(new {message = "EndTime måste vara efter StartTime"});
 
             //Vallidera resurs
             var resource = await _resources.GetById(dto.ResourceId, ct);
-            if(resource is null) return BadRequest("Ogiltigt ResourceId");
+            if(resource is null) return BadRequest(new {message = "Ogiltigt ResourceId"});
 
             //Kolla krockar
-            if (await _bookings.HasOverlap(dto.ResourceId, dto.StartTime, dto.EndTime, null, ct))
-                return Conflict("Tiden krockar med en befintlig boking");
+            //if (await _bookings.HasOverlap(dto.ResourceId, dto.StartTime, dto.EndTime, null, ct))
+              //  return Conflict("Tiden krockar med en befintlig boking");
 
             var toUpdate = new Booking
             {

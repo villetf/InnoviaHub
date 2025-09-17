@@ -68,7 +68,7 @@ export class AuthService {
 
   logout(): void {
     const logoutRequest: EndSessionRequest = {
-      postLogoutRedirectUri: 'http://localhost:4200'
+      postLogoutRedirectUri: window.__env?.NG_APP_LOGOUT_REDIRECT_URL
     };
 
     this.msalService.logoutPopup(logoutRequest);

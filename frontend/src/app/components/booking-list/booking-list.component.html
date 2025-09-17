@@ -1,0 +1,47 @@
+<div class="rounded-2xl border border-border bg-bg-alt p-3">
+  <div
+    class="mb-3 flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-border"
+  >
+    <span class="text-lg">≡</span>
+    <input
+      class="flex-1 outline-none text-sm"
+      placeholder="Hinted search text"
+    />
+    <span class="text-lg">🔍</span>
+  </div>
+
+  <div *ngIf="loading" class="text-sm text-heading/70 p-2">Laddar…</div>
+  <div *ngIf="error" class="text-sm text-error p-2">{{ error }}</div>
+
+  <ul
+    class="divide-y divide-border rounded-xl overflow-hidden bg-white border border-border"
+  >
+    <li
+      *ngFor="let b of items"
+      (click)="bookingSelected.emit(b.id)"
+      class="flex items-center justify-between px-4 py-3 cursor-pointer transition"
+      [ngClass]="{
+        'bg-bg-alt': b.id === selectedId,
+        'hover:bg-bg': b.id !== selectedId
+      }"
+    >
+      <div>
+        <div class="font-medium text-heading">
+          {{ b.resourceName || "Bokning" }} {{ b.id }}
+        </div>
+        <div class="text-xs opacity-70">
+          {{ b.startTime | date : "yyyy-MM-dd HH:mm" }} –
+          {{ b.endTime | date : "HH:mm" }} · Av: {{ shortGuid(b.userId) }}
+        </div>
+      </div>
+      <span>›</span>
+    </li>
+
+    <li
+      *ngIf="!loading && !items?.length"
+      class="px-4 py-3 text-sm text-heading/70"
+    >
+      Inga bokningar.
+    </li>
+  </ul>
+</div>

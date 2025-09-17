@@ -1,0 +1,13 @@
+<div class="page-container">
+  <div class="page-container__inner">
+    <app-nav-tabs
+      [tabs]="tabs"
+      [activeId]="active()"
+      (changeTab)="setTab($event)"
+    ></app-nav-tabs>
+
+    @switch (active()) { @case ('bookings') {<app-booking-pane
+    ></app-booking-pane> } @case ('sensors') {} @case ('resources') {
+    <app-resources></app-resources> } }
+  </div>
+</div>
