@@ -95,8 +95,6 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
   }
 
   selectType(typeId: number) {
-    this.isBooked = false;
-    this.confirmationIsVisible = false;
     if (this.selectedTypeId === typeId) return;
     this.selectedTypeId = typeId;
     this.refreshResources();
@@ -259,79 +257,5 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
     this.isBooked = false;
     this.confirmationIsVisible = false;
     this.errorMessage = '';
-  }
-
-  selectResource(
-    resourceId: number | null,
-    name: string | null,
-    isAvailable: boolean
-  ) {
-    this.isBooked = false;
-    this.confirmationIsVisible = false;
-
-    if (isAvailable === false) return;
-
-    if (!resourceId) return;
-    this.selectedResourceId = resourceId;
-    this.selectedResourceName = name;
-
-    // Scrolla ner till nästa steg(resurslista) i mobilläge
-    const screenWidth = this.getCurrentScreenWidth();
-    if (screenWidth < 768) {
-      document.getElementById('bookButton')?.scrollIntoView();
-    }
-  }
-
-  handleClickBook() {
-    const screenWidth = this.getCurrentScreenWidth();
-
-    // Mobile
-    if (screenWidth < 768) {
-      if (!this.selectedTypeId) {
-        return document.getElementById('resourceType')?.scrollIntoView();
-      } else if (!this.selectedDate) {
-        return document.getElementById('calendar')?.scrollIntoView();
-      } else if (!this.selectedResourceId) {
-        return document.getElementById('resourceList')?.scrollIntoView();
-      }
-    }
-
-    // Desktop
-    if (!this.selectedTypeId || !this.selectedDate || !this.selectedResourceId)
-      return;
-
-    // Visa popup för bekräftelse
-    this.confirmationIsVisible = true;
-  }
-
-  receiveSelectedDateFromDatePicker(e: Date | null) {
-    this.isBooked = false;
-    this.confirmationIsVisible = false;
-
-    this.selectedDate = e;
-
-    // Scrolla ner till nästa steg(resurslista) i mobilläge
-    const screenWidth = this.getCurrentScreenWidth();
-    if (screenWidth < 768) {
-      document.getElementById('resourceList')?.scrollIntoView();
-    }
-  }
-
-  getCurrentScreenWidth() {
-    return window.innerWidth;
-  }
-
-  receiveButtonClickedFromConfirmation(e: string) {
-    if (e === 'cancel') {
-      this.confirmationIsVisible = false;
-    } else {
-      if (this.selectedDate && this.selectedResourceId) {
-        // TODO: skicka datan till backend
-        console.log('ResourceTypeId: ', this.selectedResourceId);
-        console.log('SelectedDate: ', this.selectedDate);
-
-        this.isBooked = true;
-      }
-    }
   }
 }
