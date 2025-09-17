@@ -9,7 +9,7 @@ import { filter } from 'rxjs';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MenuBarComponent, DatePickerComponent, CommonModule],
+  imports: [RouterOutlet, MenuBarComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
