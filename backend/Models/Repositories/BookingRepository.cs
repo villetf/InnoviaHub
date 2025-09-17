@@ -49,12 +49,12 @@ public class BookingRepository : IBookingRepository
         await _dbContext.Bookings.Include(b => b.Resource).FirstOrDefaultAsync(b => b.Id == id, ct);
 
     //Lite osäker på om det här behövs, men better safe than sorry
-    public async Task<bool> HasOverlap(int resourceId, DateTime start, DateTime end, int? ignoreBookingId = null, CancellationToken ct = default)
+    /*public async Task<bool> HasOverlap(int resourceId, DateTime start, DateTime end, int? ignoreBookingId = null, CancellationToken ct = default)
     {
         return await _dbContext.Bookings
             .Where(b => b.ResourceId == resourceId && (ignoreBookingId == null || b.Id != ignoreBookingId))
             .AnyAsync(b => start < b.EndTime && end > b.StartTime, ct);
-    }
+    }*/
 
     public async Task<Booking?> Update(Booking booking, CancellationToken ct = default)
     {

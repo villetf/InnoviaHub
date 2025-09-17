@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AppConfigService } from '../../../core/app-config.service';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Booking } from '../models/booking.model';
+import {
+  Booking,
+  BookingRead,
+  BookingUpdateDto,
+} from '../models/booking.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
@@ -28,5 +32,21 @@ export class BookingService {
         return throwError(() => error);
       })
     );
+  }
+
+  getAll(): Observable<BookingRead[]> {
+    return this.http.get<BookingRead[]>(this.url);
+  }
+
+  getById(id: number): Observable<BookingRead> {
+    return this.http.get<BookingRead>(`${this.url}/${id}`);
+  }
+
+  update(id: number, dto: BookingUpdateDto): Observable<BookingRead> {
+    return this.http.put<BookingRead>(`${this.url}/${id}`, dto);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
   }
 }
