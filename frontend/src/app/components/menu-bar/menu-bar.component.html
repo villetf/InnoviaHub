@@ -2,6 +2,31 @@
   <ul class="menu-bar-list">
     <li
       [class]="
+        currentRoute() === '/admin'
+          ? 'menu-bar-list__item--active'
+          : 'menu-bar-list__item'
+      "
+      id="admin"
+    >
+      <a routerLink="admin">
+        <div class="menu-bar-list__content">
+          <figure class="menu-bar-list__icon">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M12 3L2 12h3v9h6v-6h2v6h6v-9h3L12 3z" fill="#49454F" />
+            </svg>
+          </figure>
+          <span class="menu-bar-list__label">Admin</span>
+        </div>
+      </a>
+    </li>
+    <li
+      [class]="
         currentRoute() === '/profil'
           ? 'menu-bar-list__item--active'
           : 'menu-bar-list__item'
@@ -88,9 +113,12 @@
         </div>
       </a>
     </li>
-    
+
     <!-- Logout knapp - visas bara när användaren är inloggad -->
-    <li *ngIf="authService.isLoggedIn()" class="menu-bar-list__item menu-bar-list__item--logout">
+    <li
+      *ngIf="authService.isLoggedIn()"
+      class="menu-bar-list__item menu-bar-list__item--logout"
+    >
       <button (click)="onLogout()" class="logout-button">
         <div class="menu-bar-list__content">
           <figure class="menu-bar-list__icon">
