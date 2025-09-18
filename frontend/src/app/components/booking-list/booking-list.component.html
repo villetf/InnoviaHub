@@ -1,18 +1,27 @@
-<div class="rounded-2xl border border-border bg-bg-alt p-3">
+<div class="rounded-2xl bg-bg-alt p-3">
   <div
     class="mb-3 flex items-center gap-2 bg-white rounded-full px-3 py-2 border border-border"
   >
-    <span class="text-lg">≡</span>
+    <span class="material-symbols-rounded text-[#993f3b] opacity-70">menu</span>
     <input
-      class="flex-1 outline-none text-sm"
+      class="flex-1 outline-none text-sm placeholder:text-[#993f3b] opacity-50"
       placeholder="Sök bokning, resurs, användare eller id…"
       [value]="search"
       (input)="onSearchInput($any($event.target).value)"
     />
-    <span class="text-lg">🔍</span>
+    <span class="material-symbols-rounded text-[#993f3b] opacity-70"
+      >search</span
+    >
   </div>
 
-  <div *ngIf="loading" class="text-sm text-heading/70 p-2">Laddar…</div>
+  <div *ngIf="loading" class="text-sm text-heading/70 p-2">
+    <span class="material-symbols-rounded text-[#993f3b] opacity-70 spin-slow"
+      >autorenew</span
+    >
+    <span class="m-3 text-lg leading-1 text-[#993f3b] opacity-70"
+      >Laddar...</span
+    >
+  </div>
   <div *ngIf="error" class="text-sm text-error p-2">{{ error }}</div>
 
   <ul
@@ -29,11 +38,11 @@
     >
       <div>
         <div class="font-medium text-heading">
-          {{ b.resourceName || "Bokning" }} {{ b.id }}
+          {{ b.resourceName || "Bokning" }}
         </div>
-        <div class="text-xs opacity-70">
-          {{ b.startTime | date : "yyyy-MM-dd HH:mm" }} –
-          {{ b.endTime | date : "HH:mm" }} · Av: {{ shortGuid(b.userId) }}
+        <div class="text-xs opacity-70 text-[#993f3b]">
+          ID: {{ b.id }} | {{ b.startTime | date : "yyyy-MM-dd HH:mm" }} –
+          {{ b.endTime | date : "HH:mm" }} | Av: {{ shortGuid(b.userId) }}
         </div>
       </div>
       <span>›</span>

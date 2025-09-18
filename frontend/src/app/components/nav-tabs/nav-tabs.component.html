@@ -8,15 +8,15 @@
       role="tab"
       [attr.aria-selected]="t.id === activeId"
       (click)="changeTab.emit(t.id)"
-      class="inline-flex items-center gap-1 px-4 py-4 text-sm mx-1 transition border bg-highlight text-primary-dark-alt"
+      class="inline-flex items-center gap-1 px-4 py-4 mx-1 transition border bg-highlight text-[#993f3b]"
       [ngClass]="{
-        'rounded-l-[30px] rounded-r-[6px] text-primary-dark-alt border-highlight mx-1 hover:bg-highlight/70':
+        'rounded-l-[30px] rounded-r-[6px] border-highlight mx-1 hover:bg-highlight/70':
           i === 0 && t.id !== activeId,
-        'rounded-r-[30px] rounded-l-[6px] text-primary-dark-alt border-highlight mx-1 hover:bg-highlight/70':
+        'rounded-r-[30px] rounded-l-[6px]  border-highlight mx-1 hover:bg-highlight/70':
           last && t.id !== activeId,
         'bg-primary-dark text-white border-primary-dark shadow-sm rounded-full':
           t.id === activeId,
-        'text-primary-dark-alt border-highlight rounded-md mx-1 hover:bg-highlight/70':
+        ' border-highlight rounded-md mx-1 hover:bg-highlight/70':
           t.id !== activeId && i !== 0 && !last
       }"
     >

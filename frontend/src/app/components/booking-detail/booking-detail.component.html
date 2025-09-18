@@ -1,11 +1,18 @@
-<div class="rounded-2xl border border-border bg-bg-alt p-5">
-  <h2 class="text-xl font-semibold text-heading mb-1">{{ title() }}</h2>
+<div class="rounded-2xl bg-bg-alt p-5 md:fixed">
+  <h2 class="text-xl font-semibold text-heading mb-1">
+    {{ title() }}
+    <span *ngIf="booking" class=""> {{ booking.id }} </span>
+  </h2>
 
-  <div class="text-sm opacity-70 mb-4" *ngIf="booking">
-    Av: {{ booking.userId?.slice(0, 8) + "…" + booking.userId?.slice(-4) }}
+  <div class="text-sm opacity-70 mb-4 text-[#993f3b]" *ngIf="booking">
+    Resurs: {{ booking.resourceName }} <br />
+    Av: {{ booking.userId }}
   </div>
 
-  <div *ngIf="!booking && !loading" class="text-sm text-heading/70">
+  <div
+    *ngIf="!booking && !loading"
+    class="text-sm text-heading/70 text-[#993f3b]"
+  >
     Ingen bokning vald.
   </div>
   <div *ngIf="error" class="text-sm text-error mb-3">{{ error }}</div>
@@ -60,10 +67,10 @@
 
       <app-button
         label="Radera"
-        [buttonStyle]="'filled'"
+        [buttonStyle]="'outlined'"
         [borderRadius]="'br-full'"
-        [bgColor]="'var(--color-highlight)'"
-        [textColor]="'#fff'"
+        [bgColor]="'var(--color-primary)'"
+        [textColor]="'#993f3b'"
         (onClick)="remove()"
       ></app-button>
     </div>
