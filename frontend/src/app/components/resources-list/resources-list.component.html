@@ -1,0 +1,75 @@
+<div class="rounded-2xl bg-bg-alt p-3">
+  <!-- Header-rad med typväljare -->
+  <div
+    class="mb-3 flex items-center gap-2 bg-white rounded-full px-3 py-2 text-[#993f3b] border border-border"
+  >
+    <span class="material-symbols-rounded text-[#993f3b] opacity-70"
+      >category</span
+    >
+    <label class="text-sm text-heading sr-only">Resurstyp</label>
+    <select
+      class="flex-1 outline-none text-sm placeholder:text-[#993f3b] opacity-80"
+      [ngModel]="selectedTypeId"
+      (ngModelChange)="typeChange.emit($event)"
+    >
+      <option *ngFor="let t of types" [ngValue]="t.id">{{ t.name }}</option>
+    </select>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-sm text-heading/70 p-2">
+    <span class="material-symbols-rounded text-[#993f3b] opacity-70 spin-slow"
+      >autorenew</span
+    >
+    <span class="m-3 text-lg leading-1 text-[#993f3b] opacity-70"
+      >Laddar...</span
+    >
+  </div>
+  <div *ngIf="error" class="text-sm text-error p-2">{{ error }}</div>
+
+  <!-- Lista -->
+  <ul
+    class="divide-y divide-border rounded-xl overflow-hidden bg-white border border-border"
+  >
+    <li
+      *ngFor="let r of resources"
+      class="flex items-center justify-between px-4 py-3"
+    >
+      <div>
+        <div class="font-medium text-heading">{{ r.name }}</div>
+        <div class="text-xs opacity-70 text-[#993f3b]">
+          Typ: {{ r.resourceTypeName || "#" + r.resourceTypeId }}
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <app-button
+          label="Redigera"
+          [buttonStyle]="'outlined'"
+          [borderRadius]="'br-full'"
+          [bgColor]="'var(--color-border)'"
+          [textColor]="'var(--color-text)'"
+          (onClick)="edit.emit(r)"
+        >
+        </app-button>
+
+        <app-button
+          label="Ta bort"
+          [buttonStyle]="'filled'"
+          [borderRadius]="'br-full'"
+          [bgColor]="'var(--color-primary)'"
+          [textColor]="'#fff'"
+          (onClick)="remove.emit(r)"
+        >
+        </app-button>
+      </div>
+    </li>
+
+    <li
+      *ngIf="!loading && !resources?.length"
+      class="px-4 py-3 text-sm text-heading/70"
+    >
+      Inga resurser för vald typ.
+    </li>
+  </ul>
+</div>

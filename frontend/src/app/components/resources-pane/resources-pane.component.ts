@@ -1,42 +1,53 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import {
-  CreateResourceDto,
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
+import {
   ResourceService,
+  CreateResourceDto,
   UpdateResourceDto,
 } from '../ResourceMenu/Services/ResourceService.service';
 import {
-  ResourceType,
   ResourceTypeService,
+  ResourceType,
 } from '../ResourceMenu/Services/ResourceTypeService.service';
 import { ResourceItem } from '../ResourceMenu/models/Resource';
+import { ResourcesListComponent } from '../resources-list/resources-list.component';
+import { ResourcesDetailsComponent } from '../resources-details/resources-details.component';
 import { ButtonComponent } from '../button/button.component';
 
 @Component({
-  selector: 'app-resources',
+  selector: 'app-resources-pane',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ButtonComponent],
-  templateUrl: './resources.component.html',
-  styleUrl: './resources.component.css',
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ResourcesListComponent,
+    ResourcesDetailsComponent,
+    ButtonComponent,
+  ],
+  templateUrl: './resources-pane.component.html',
 })
-export class ResourcesComponent implements OnInit {
+export class ResourcesPaneComponent implements OnInit {
   private fb = inject(FormBuilder);
   private resourceApi = inject(ResourceService);
   private typeApi = inject(ResourceTypeService);
 
   types: ResourceType[] = [];
   resources: ResourceItem[] = [];
-  loading: boolean = false;
-  error: string = '';
-  success: string = '';
 
-  // UI state
+  loading = false;
+  error = '';
+  success = '';
+
   selectedTypeId = signal<number | null>(null);
   editingId = signal<number | null>(null);
 
-  // Form
   form = this.fb.group({
     name: [
       '',
@@ -45,19 +56,23 @@ export class ResourcesComponent implements OnInit {
     resourceTypeId: [null as number | null, [Validators.required]],
   });
 
-  // Visa rätt titel på formulärknappen
   isEditing = computed(() => this.editingId() !== null);
 
   ngOnInit(): void {
     this.loadTypes();
   }
 
+  private showSuccess(msg: string, ms = 4000) {
+    this.success = msg;
+    setTimeout(() => (this.success = ''), ms);
+  }
+
   loadTypes() {
+    this.loading = true;
     this.typeApi.getAll().subscribe({
       next: (res) => {
         this.types = res ?? [];
         if (this.types.length && this.selectedTypeId() === null) {
-          // välj första typ automatiskt
           this.selectType(this.types[0].id);
         }
       },
@@ -70,7 +85,6 @@ export class ResourcesComponent implements OnInit {
 
   selectType(typeId: number) {
     this.selectedTypeId.set(typeId);
-    // sätt formets typ om vi skapar ny
     if (!this.isEditing()) this.form.patchValue({ resourceTypeId: typeId });
     this.fetchResources();
   }
@@ -82,7 +96,7 @@ export class ResourcesComponent implements OnInit {
     this.error = '';
     this.resourceApi.getByType(t).subscribe({
       next: (list) => {
-        this.resources = list;
+        this.resources = list ?? [];
       },
       error: (err) => {
         this.error = 'Kunde inte hämta resurser';
@@ -94,7 +108,35 @@ export class ResourcesComponent implements OnInit {
     });
   }
 
-  submit() {
+  // events från listan
+  handleEdit(item: ResourceItem) {
+    this.editingId.set(item.id);
+    this.form.reset({
+      name: item.name,
+      resourceTypeId: item.resourceTypeId,
+    });
+  }
+
+  handleDelete(item: ResourceItem) {
+    if (!confirm(`Ta bort "${item.name}"?`)) return;
+    this.resourceApi.delete(item.id).subscribe({
+      next: () => {
+        this.showSuccess(`Resurs raderad: ${item.name}`);
+        this.fetchResources();
+      },
+      error: (err) => {
+        if (err?.status === 409) {
+          this.error = 'Resursen kan inte raderas eftersom den har bokningar.';
+        } else {
+          this.error = 'Kunde inte radera resurs.';
+        }
+        console.error(err);
+      },
+    });
+  }
+
+  // events från details
+  handleSubmit() {
     this.error = '';
     this.success = '';
     if (this.form.invalid) {
@@ -108,10 +150,9 @@ export class ResourcesComponent implements OnInit {
 
     const id = this.editingId();
     if (id) {
-      // UPDATE
       this.resourceApi.update(id, payload as UpdateResourceDto).subscribe({
         next: (updated) => {
-          this.success = `Resurs uppdaterad: ${updated.name}`;
+          this.showSuccess(`Resurs uppdaterad: ${updated.name}`);
           this.cancelEdit();
           this.fetchResources();
         },
@@ -121,10 +162,9 @@ export class ResourcesComponent implements OnInit {
         },
       });
     } else {
-      // CREATE
       this.resourceApi.create(payload as CreateResourceDto).subscribe({
         next: (created) => {
-          this.success = `Resurs skapad: ${created.name}`;
+          this.showSuccess(`Resurs skapad: ${created.name}`);
           this.form.reset({
             name: '',
             resourceTypeId: this.selectedTypeId(),
@@ -139,36 +179,9 @@ export class ResourcesComponent implements OnInit {
     }
   }
 
-  startEdit(item: ResourceItem) {
-    this.editingId.set(item.id);
-    this.form.reset({
-      name: item.name,
-      resourceTypeId: item.resourceTypeId,
-    });
-  }
-
   cancelEdit() {
     this.editingId.set(null);
-    // nollställ form men behåll vald typ
     const t = this.selectedTypeId();
     this.form.reset({ name: '', resourceTypeId: t ?? null });
-  }
-
-  delete(item: ResourceItem) {
-    if (!confirm(`Ta bort "${item.name}"?`)) return;
-    this.resourceApi.delete(item.id).subscribe({
-      next: () => {
-        this.success = `Resurs raderad: ${item.name}`;
-        this.fetchResources();
-      },
-      error: (err) => {
-        if (err?.status === 409) {
-          this.error = 'Resursen kan inte raderas eftersom den har bokningar.';
-        } else {
-          this.error = 'Kunde inte radera resurs.';
-        }
-        console.error(err);
-      },
-    });
   }
 }

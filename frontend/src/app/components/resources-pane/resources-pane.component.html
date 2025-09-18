@@ -1,0 +1,41 @@
+<!-- Alerts -->
+<div
+  *ngIf="success"
+  class="mb-3 rounded-md border border-success bg-success/10 text-heading px-3 py-2 text-sm"
+>
+  {{ success }}
+</div>
+
+<div class="grid grid-cols-12 gap-6">
+  <!-- LIST -->
+  <div class="col-span-12 md:col-span-5 lg:col-span-5">
+    <app-resources-list
+      [resources]="resources"
+      [loading]="loading"
+      [error]="error"
+      [types]="types"
+      [selectedTypeId]="selectedTypeId()"
+      (typeChange)="selectType($event)"
+      (edit)="handleEdit($event)"
+      (remove)="handleDelete($event)"
+    >
+    </app-resources-list>
+  </div>
+
+  <!-- Divider -->
+  <div class="hidden md:flex md:col-span-1">
+    <div class="h-full w-px bg-border mx-auto"></div>
+  </div>
+
+  <!-- DETAILS -->
+  <div class="col-span-12 md:col-span-6 lg:col-span-6">
+    <app-resources-details
+      [types]="types"
+      [form]="form"
+      [isEditing]="isEditing()"
+      (submitForm)="handleSubmit()"
+      (cancel)="cancelEdit()"
+    >
+    </app-resources-details>
+  </div>
+</div>
