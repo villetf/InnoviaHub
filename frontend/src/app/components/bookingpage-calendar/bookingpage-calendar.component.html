@@ -1,0 +1,5 @@
+<div id="calendar" class="rounded-2xl bg-bg-alt p-5 h-full">
+  <h2 class="text-xl font-semibold text-heading mb-4">Välj datum</h2>
+
+  <app-date-picker (dateChange)="dateSelected.emit($event)"></app-date-picker>
+</div>
