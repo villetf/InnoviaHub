@@ -40,3 +40,39 @@
 .date-picker-warning {
   color: var(--color-warning);
 }
+
+/* Enkel polish för Material-kalendern */
+:host ::ng-deep .mat-calendar {
+  width: 100%;
+}
+
+:host ::ng-deep .mat-calendar-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* CHANGED: Matcha din primärfärg om du vill */
+:host ::ng-deep .mat-calendar-body-selected {
+  background: var(--color-primary, #993f3b) !important;
+  color: #fff !important;
+}
+:host ::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--color-primary, #993f3b) !important;
+}
+
+/* CHANGED: gör det möjligt att blocka interaktion när disabled */
+.calendar-wrapper {
+  position: relative;
+}
+
+/* Blockerar klick/tangentbord och tonar ner kalendern */
+.calendar-wrapper[aria-disabled="true"] {
+  opacity: 0.6; /* nertonad look */
+}
+
+.calendar-blocker {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto; /* fångar alla events */
+  background: transparent; /* ingen visuell overlay, bara blocker */
+}

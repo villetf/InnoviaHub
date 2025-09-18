@@ -24,28 +24,25 @@ export class BookingpageMenuComponent {
 
   get tabsForMenu(): AdminTab[] {
     return (this.types ?? []).map((t: any) => ({
-      id: String(t.id) as unknown as AdminTabId, // adapter: number -> AdminTabId
+      id: String(t.id) as unknown as AdminTabId,
       label: t.name,
       countAvailable: t.countAvailable,
       countAll: t.countAll,
     }));
   }
 
-  /** Aktiv flik = vald resurstyp */
+  //Aktiv flik = vald resurstyp
   get activeTabId(): AdminTabId {
     return this.selectedTypeId != null
       ? (String(this.selectedTypeId) as unknown as AdminTabId)
       : ('' as unknown as AdminTabId);
   }
 
-  /** Klick från nav-tabs -> välj resurstyp (samma beteende som tidigare) */
   onChangeTab(id: AdminTabId) {
     const numericId = Number(id);
     if (!Number.isNaN(numericId)) {
       this.selectType.emit(numericId);
     } else {
-      // Om dina typ-id INTE är numeriska, byt till en annan mappning här
-      // t.ex. hitta typen via label eller separat id-map.
     }
   }
 }
