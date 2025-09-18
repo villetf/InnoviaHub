@@ -167,3 +167,23 @@ img {
     background-color: #fff;
   }
 }
+
+.material-symbols-rounded.msr {
+  font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+  font-size: 1.125rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: spin-slow 2s linear infinite;
+}

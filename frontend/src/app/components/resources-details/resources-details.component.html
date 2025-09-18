@@ -1,0 +1,92 @@
+<div class="rounded-2xl bg-bg-alt p-5">
+  <h2 class="text-xl font-semibold text-heading mb-1">
+    {{ isEditing ? "Redigera resurs" : "Skapa ny resurs" }}
+  </h2>
+
+  <div class="text-sm opacity-70 mb-4 text-[#993f3b]">
+    <ng-container *ngIf="isEditing; else createInfo">
+      Redigerar resurs (välj typ och namn)
+    </ng-container>
+    <ng-template #createInfo> Ny resurs (välj typ och namn) </ng-template>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submitForm.emit()" class="space-y-4">
+    <div>
+      <div
+        class="text-xs uppercase tracking-wide opacity-70 mb-1 text-[#993f3b]"
+      >
+        Namn
+      </div>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        class="w-full rounded-md border border-border bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
+        placeholder="t.ex. Skrivbord 3"
+      />
+      <div
+        class="mt-1 text-xs text-error"
+        *ngIf="form.controls['name'].touched && form.controls['name'].invalid"
+      >
+        Namn är obligatoriskt (2–80 tecken).
+      </div>
+    </div>
+
+    <div>
+      <div
+        class="text-xs uppercase tracking-wide opacity-70 mb-1 text-[#993f3b]"
+      >
+        Resurstyp
+      </div>
+      <select
+        id="type"
+        formControlName="resourceTypeId"
+        class="w-full rounded-md border border-border bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-primary"
+      >
+        <option [ngValue]="null" disabled>Välj typ…</option>
+        <option *ngFor="let t of types" [ngValue]="t.id">
+          {{ t.name }}
+        </option>
+      </select>
+      <div
+        class="mt-1 text-xs text-error"
+        *ngIf="
+          form.controls['resourceTypeId'].touched &&
+          form.controls['resourceTypeId'].invalid
+        "
+      >
+        Du måste välja en resurstyp.
+      </div>
+    </div>
+
+    <div class="pt-2 flex items-center gap-4">
+      <app-button
+        [type]="'submit'"
+        [label]="isEditing ? 'Spara' : 'Skapa'"
+        [buttonStyle]="'filled'"
+        [borderRadius]="'br-full'"
+        [bgColor]="'var(--color-primary)'"
+        [textColor]="'#fff'"
+        [disabled]="form.invalid"
+      >
+      </app-button>
+
+      <app-button
+        [label]="isEditing ? 'Avbryt' : 'Rensa'"
+        [buttonStyle]="'outlined'"
+        [borderRadius]="'br-full'"
+        [bgColor]="'var(--color-primary)'"
+        [textColor]="'#993f3b'"
+        (onClick)="
+          isEditing
+            ? cancel.emit()
+            : form.reset({
+                name: '',
+                resourceTypeId: form.value.resourceTypeId ?? null
+              })
+        "
+      >
+      </app-button>
+    </div>
+  </form>
+</div>
