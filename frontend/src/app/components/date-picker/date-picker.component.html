@@ -1,11 +1,7 @@
-<!-- CHANGED: card-wrapper + custom header + kompakt kalender -->
 <div class="calendar-card">
-  <!-- CHANGED -->
-  <!-- (valfri) label ovanför -->
-  <label *ngIf="label" class="date-picker-label mb-2">{{ label }}</label>
-
   <mat-calendar
     [selected]="selected"
+    [startAt]="selected ?? today"
     (selectedChange)="onCalendarSelected($event)"
     [minDate]="minDateAsDate"
     [maxDate]="maxDateAsDate"
@@ -15,21 +11,3 @@
   >
   </mat-calendar>
 </div>
-
-<!-- Ursprungs-INPUT (kommenterad bort, ersatt av mat-calendar) -->
-<!--
-  <div class="date-picker-container">
-    <label *ngIf="label" class="date-picker-label">{{ label }}</label>
-    <input
-      type="date"
-      class="date-picker-input"
-      [value]="value"
-      [placeholder]="placeholder"
-      [min]="minDate"
-      [max]="maxDate"
-      [disabled]="disabled"
-      (input)="onDateInput($event)"
-      (blur)="onTouched()"
-    />
-  </div>
-  -->

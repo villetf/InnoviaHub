@@ -1,114 +1,130 @@
-/* Komponent-lokal Tailwind-styling (ingen @layer här) */
-
-/* Wrapper-kort (om du använder <div class="calendar-card"> i HTML) */
 .calendar-card {
-  /* ÄNDRA kortets bakgrund/ram/spacing HÄR */
-  @apply rounded-2xl bg-[#ffe0dc] p-1;
+  border-radius: 1rem;
+  background-color: #ffe0dc;
+  padding: 0.25rem;
 }
-
-/* --- Inre delar i Angular Material-kalendern --- */
 
 /* Hela kalenderns bredd */
 :host ::ng-deep .mat-calendar {
-  @apply w-full;
+  width: 100%;
 }
 
-/* Månadstabellens bakgrund + rundning */
+/*Stabil tabellayout (7 lika kolumner) */
 :host ::ng-deep .mat-calendar-table {
-  /* ÄNDRA månadstabellens bakgrund HÄR */
-  @apply bg-white rounded-2xl overflow-hidden;
+  table-layout: fixed;
+  width: 100%;
 }
 
-/* Dölj “label”-raden (valfritt) */
+/* Göm labeln utan att påverka tabell-layouten */
 :host ::ng-deep .mat-calendar-body-label {
-  @apply hidden;
+  visibility: hidden;
+  opacity: 0;
+  height: 0 !important;
+  line-height: 0 !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep app-calendar-header .cal-head__month {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  opacity: 0.6;
+  color: #993f3b;
+  margin-top: 0.5rem;
 }
 
 /* Veckodagarnas header-rad */
 :host ::ng-deep .mat-calendar-table-header th {
-  /* ÄNDRA veckodagars storlek/färg/format HÄR */
-  @apply text-sm uppercase tracking-wide opacity-60 text-[#993f3b] py-2.5;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  opacity: 0.6;
+  color: #993f3b;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
 }
 
-/* Dagcellernas storlek */
+/* Dagcellernas storlek — låt <td> vara auto så offset-celler funkar */
 :host ::ng-deep .mat-calendar-body-cell {
-  /* ÄNDRA cellstorlek HÄR */
-  @apply h-9 w-9 md:h-10 md:w-10;
-}
-:host ::ng-deep .mat-calendar-body-cell-content {
-  /* Rundade “piller” + radavstånd som matchar höjden */
-  @apply rounded-full leading-9 md:leading-10;
+  width: auto;
+  height: auto;
 }
 
-/* “Idag”-ring (när inte vald) */
+/* Dagnummerns “piller”-form + centrerat innehåll i stället */
+:host ::ng-deep .mat-calendar-body-cell-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  border-radius: 9999px;
+}
+@media (min-width: 768px) {
+  :host ::ng-deep .mat-calendar-body-cell-content {
+    line-height: 2.5rem;
+  }
+}
+
+/* Idag när den INTE är vald */
 :host
   ::ng-deep
   .mat-calendar-body-today:not(.mat-calendar-body-selected)
   .mat-calendar-body-cell-content {
-  /* ÄNDRA “idag”-ringens färg/tjocklek HÄR */
-  @apply outline outline-2 outline-[var(--color-primary)];
+  box-shadow: inset 0 0 0 2px #66312c !important;
 }
 
-/* Vald dag (fylld bakgrund + textfärg) */
-:host ::ng-deep .mat-calendar-body-selected .mat-calendar-body-cell-content {
-  /* ÄNDRA vald-dag bakgrund/text HÄR */
-  @apply bg-[var(--color-primary)] text-white;
-}
-
-/* Hover på dagar (ej disabled) */
+/* Idag när den ÄR vald */
 :host
   ::ng-deep
-  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover
+  .mat-calendar-body-selected.mat-calendar-body-today
   .mat-calendar-body-cell-content {
-  /* ÄNDRA hover-bakgrund HÄR */
-  @apply bg-[#f7f1f1];
+  box-shadow: inset 0 0 0 2px #66312c !important;
 }
 
-/* Dagar utanför aktuell månad (dämpa) */
-:host ::ng-deep .mat-calendar-body-cell.mat-calendar-body-out {
-  /* ÄNDRA dämpning HÄR */
-  @apply opacity-40;
+/* Täck alla varianter av "selected" */
+:host ::ng-deep .mat-calendar-body-selected,
+:host ::ng-deep .mat-calendar-body-selected .mat-calendar-body-cell-content,
+:host ::ng-deep .mat-calendar-body-cell-content.mat-calendar-body-selected {
+  background: var(--color-primary, #993f3b) !important;
+  color: #fff !important;
 }
 
-/* Helger via dateClass (om du returnerar klassen "cal-weekend" i TS) */
+/* Se till att hover inte vinner över selected */
+:host
+  ::ng-deep
+  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):not(
+    .mat-calendar-body-selected
+  ):hover
+  .mat-calendar-body-cell-content {
+  background-color: #ff7e7080 !important;
+}
+
+/* Helger via dateClass (om du returnerar "cal-weekend" i TS) */
 :host ::ng-deep .cal-weekend .mat-calendar-body-cell-content {
-  /* ÄNDRA helg-bakgrund/text HÄR */
-  @apply bg-rose-50 text-[#993f3b];
+  background-color: rgba(255, 126, 112, 0.2);
 }
 
-/* --- Custom header (om du använder CalendarHeaderComponent) --- */
-
-/* Månadstitel (“september 2025”) */
+/* Custom header (titel + subrader) */
 :host ::ng-deep app-calendar-header .cal-head__title {
-  /* ÄNDRA månadstextens storlek/färg HÄR */
-  @apply text-2xl font-semibold text-heading;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  color: var(--color-heading, #993f3b);
 }
-
-/* Liten rad ovanför (“Välj datum”) */
 :host ::ng-deep app-calendar-header .cal-head__sub {
-  /* ÄNDRA färg/storlek/dämpning HÄR */
-  @apply text-sm text-[#993f3b] opacity-70;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #993f3b;
+  opacity: 0.7;
 }
 
 /* Navigationsknappar (pilar) */
 :host ::ng-deep app-calendar-header .cal-nav-btn {
-  /* ÄNDRA knappens rundning HÄR */
-  @apply rounded-lg;
+  border-radius: 0.5rem;
 }
 :host ::ng-deep app-calendar-header .cal-nav-btn:hover {
-  /* ÄNDRA hover-färg på pilarna HÄR */
-  @apply bg-black/5;
-}
-
-/* --- Disabled-overlay (när komponentens @Input disabled = true) --- */
-:host .calendar-wrapper {
-  @apply relative;
-}
-:host .calendar-wrapper[aria-disabled="true"] {
-  @apply opacity-60;
-}
-:host .calendar-blocker {
-  @apply absolute inset-0;
-  pointer-events: auto; /* blockar klick */
-  background: transparent;
+  background: rgba(0, 0, 0, 0.05);
 }
