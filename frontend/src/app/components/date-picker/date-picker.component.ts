@@ -5,6 +5,7 @@ import {
   EventEmitter,
   forwardRef,
   OnInit,
+  AfterViewInit, // ← lägg till
   ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -46,7 +47,9 @@ import { MatIconModule } from '@angular/material/icon';
     { provide: MAT_DATE_LOCALE, useValue: 'sv-SE' },
   ],
 })
-export class DatePickerComponent implements ControlValueAccessor, OnInit {
+export class DatePickerComponent
+  implements ControlValueAccessor, OnInit, AfterViewInit
+{
   @Input() label: string = '';
   @Input() placeholder: string = 'Select date';
   @Input() minDate: string = '';
@@ -64,12 +67,12 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
 
   // === HELPERS (lokal, TZ-säkra) ======================================
 
-  // ADDED: Normalisera ett datum till lokal tid kl 12:00 (noon)
+  // Normalisera ett datum till lokal tid kl 12:00 (noon)
   private toLocalNoon(d: Date): Date {
     return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0, 0);
   }
 
-  // ADDED: Bygg YYYY-MM-DD av lokala delar (utan ISO/UTC)
+  // Bygg YYYY-MM-DD av lokala delar (utan ISO/UTC)
   private toLocalYmd(d: Date): string {
     const pad = (n: number, len = 2) => String(n).padStart(len, '0');
     const y = d.getFullYear();
@@ -78,7 +81,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
     return `${y}-${m}-${day}`;
   }
 
-  // ADDED: Säker parse av 'YYYY-MM-DD' till lokal Date (midnatt lokalt)
+  // Säker parse av 'YYYY-MM-DD' till lokal Date (midnatt lokalt) — använder noon för robusthet
   private parseYmdLocal(ymd: string): Date | null {
     if (!ymd) return null;
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd);
@@ -86,23 +89,29 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
     const y = +m[1],
       mo = +m[2] - 1,
       d = +m[3];
-    return new Date(y, mo, d, 12, 0, 0, 0); // kl 12:00 för robusthet
+    return new Date(y, mo, d, 12, 0, 0, 0);
   }
 
   // =====================================================================
 
   ngOnInit(): void {
-    // CHANGED: utgå från idag men normalisera till lokal noon
-    const currentDate = this.toLocalNoon(new Date()); // CHANGED
-    this.dateChange.emit(currentDate); // CHANGED (emit “safe”)
+    // Sätt endast minDate här (påverkar inte föräldern och triggar inte NG0100)
+    this.minDate = this.toLocalYmd(new Date());
+  }
 
-    // CHANGED: visa YYYY-MM-DD byggt lokalt (ingen ISO-split)
-    this.value = this.toLocalYmd(currentDate); // CHANGED
-    this.selected = currentDate; // CHANGED
+  ngAfterViewInit(): void {
+    // Första emitten sker efter första change detection för att undvika NG0100
+    queueMicrotask(() => {
+      const currentDate = this.toLocalNoon(new Date());
+      this.selected = currentDate;
+      this.value = this.toLocalYmd(currentDate);
+      this.dateChange.emit(currentDate);
 
-    // CHANGED: sätt minDate som YYYY-MM-DD lokalt (visuell begränsning)
-    const min = this.toLocalYmd(new Date()); // CHANGED
-    this.minDate = min; // CHANGED
+      if (this.calendar) {
+        this.calendar.activeDate = currentDate;
+        this.calendar.stateChanges.next();
+      }
+    });
   }
 
   private onChange = (value: Date | null) => {};
@@ -110,17 +119,14 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
 
   // När användaren väljer ett datum i mat-calendar
   onCalendarSelected(date: Date | null) {
-    // CHANGED: normalisera val till lokal noon direkt
-    const safe = date ? this.toLocalNoon(date) : null; // CHANGED
-    this.selected = safe; // CHANGED
-
-    // CHANGED: håll value i sync som YYYY-MM-DD (lokalt)
-    this.value = safe ? this.toLocalYmd(safe) : ''; // CHANGED
-    this.onChange(safe); // CHANGED
-    this.dateChange.emit(safe); // CHANGED
+    const safe = date ? this.toLocalNoon(date) : null;
+    this.selected = safe;
+    this.value = safe ? this.toLocalYmd(safe) : '';
+    this.onChange(safe);
+    this.dateChange.emit(safe);
     this.onTouched();
 
-    // Tvinga kalenderns "activeDate" att följa det valda datumet
+    // Håll kalenderns "activeDate" i synk med valt datum
     if (safe && this.calendar) {
       this.calendar.activeDate = safe;
       this.calendar.stateChanges.next();
@@ -129,33 +135,27 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
 
   // konvertera sträng-inputs till mat-calendern
   get minDateAsDate(): Date | null {
-    // CHANGED: parsa säkert till lokal Date (inte new Date('YYYY-MM-DD'))
-    return this.parseYmdLocal(this.minDate); // CHANGED
+    return this.parseYmdLocal(this.minDate);
   }
-
   get maxDateAsDate(): Date | null {
-    // CHANGED: parsa säkert till lokal Date
-    return this.parseYmdLocal(this.maxDate); // CHANGED
+    return this.parseYmdLocal(this.maxDate);
   }
 
   // ControlValueAccessor implementation
   writeValue(value: Date | string | null): void {
     if (value instanceof Date) {
-      // CHANGED: normalisera inkommande Date till lokal noon
-      const safe = this.toLocalNoon(value); // CHANGED
-      this.selected = safe; // CHANGED
-      this.value = this.toLocalYmd(safe); // CHANGED
+      const safe = this.toLocalNoon(value);
+      this.selected = safe;
+      this.value = this.toLocalYmd(safe);
     } else if (typeof value === 'string' && value) {
-      // CHANGED: parsa "YYYY-MM-DD" säkert och normalisera till noon
-      const parsed = this.parseYmdLocal(value); // CHANGED
-      this.selected = parsed; // CHANGED
-      this.value = parsed ? this.toLocalYmd(parsed) : ''; // CHANGED
+      const parsed = this.parseYmdLocal(value);
+      this.selected = parsed;
+      this.value = parsed ? this.toLocalYmd(parsed) : '';
     } else {
       this.value = '';
       this.selected = null;
     }
 
-    // Om vi får nytt värde utifrån, synka även activeDate
     if (this.selected && this.calendar) {
       this.calendar.activeDate = this.selected;
       this.calendar.stateChanges.next();
@@ -165,11 +165,9 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
   registerOnChange(fn: (value: Date | null) => void): void {
     this.onChange = fn;
   }
-
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
@@ -177,9 +175,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
   // (valfritt) datum att highlighta från parent
   @Input() highlightedDates: Array<Date | string> = [];
 
-  // CHANGED: normalisera till lokal YYYY-MM-DD utan ISO/UTC
+  // normalisera till lokal YYYY-MM-DD utan ISO/UTC
   private normalize(d: Date): string {
-    // CHANGED
     const localMid = new Date(
       d.getFullYear(),
       d.getMonth(),
@@ -201,7 +198,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
     });
   }
 
-  // Tailwind-klasser per datum (ex: helger)
+  // CSS-klasser per datum (ex: helger)
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
     if (view !== 'month') return '';
     const classes: string[] = [];

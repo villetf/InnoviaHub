@@ -85,7 +85,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 // Joel's ändringar för rätt userinfo - SignalR hub för realtidsuppdateringar av bokningar
-app.MapHub<BookingHub>("/hubs/bookings");
+app.MapHub<BookingHub>("/hubs/bookings").RequireCors("ng");
 
 app.Run();
 
