@@ -1,6 +1,7 @@
+// Joel's ändringar för rätt userinfo - Lade till userName i alla booking-interfaces för att visa namn istället för GUID
 export type Booking = {
-  userId: string;
-  userName?: string;
+  userId: string; // Azure AD Object ID (oid)
+  userName?: string; // Joel's ändringar: Display name från Azure AD
   resourceId: number;
   startTime: Date;
   endTime: Date;
@@ -9,8 +10,8 @@ export type Booking = {
 
 export interface BookingRead {
   id: number;
-  userId: string;
-  userName?: string;
+  userId: string; // Azure AD Object ID (oid)
+  userName?: string; // Joel's ändringar: Display name från Azure AD
   resourceId: number;
   resourceName?: string;
   startTime: string; // ISO
@@ -21,7 +22,7 @@ export interface BookingRead {
 
 export interface BookingUpdateDto {
   userId: string;
-  userName?: string;
+  userName?: string; // Joel's ändringar: Display name från Azure AD
   resourceId: number;
   startTime: string; // ISO
   endTime: string; // ISO
