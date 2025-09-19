@@ -42,7 +42,7 @@
         </div>
         <div class="text-xs opacity-70 text-[#993f3b]">
           ID: {{ b.id }} | {{ b.startTime | date : "yyyy-MM-dd HH:mm" }} –
-          {{ b.endTime | date : "HH:mm" }} | Av: {{ shortGuid(b.userId) }}
+          {{ b.endTime | date : "HH:mm" }} | Av: {{ b.userName || shortGuid(b.userId) }}
         </div>
       </div>
       <span>›</span>

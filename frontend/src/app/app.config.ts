@@ -74,10 +74,8 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
         protectedResources.graphApi.endpoint,
         protectedResources.graphApi.scopes,
       ],
-      [
-        protectedResources.innoviaApi.endpoint,
-        protectedResources.innoviaApi.scopes,
-      ],
+      // Temporarily removed innoviaApi to avoid token auth issues
+      // [protectedResources.innoviaApi.endpoint, protectedResources.innoviaApi.scopes]
     ]),
   };
 }

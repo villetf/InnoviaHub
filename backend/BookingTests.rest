@@ -14,7 +14,7 @@ POST http://localhost:5184/api/booking
 Content-Type: application/json
 
 {
-  "userId": "33333333-3333-3333-3333-333333333333",
+  "userId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
   "resourceId": 1,
   "startTime": "2025-09-06T10:00:00",
   "endTime": "2025-09-06T11:00:00",
@@ -26,7 +26,7 @@ PUT http://localhost:5184/api/booking/1
 Content-Type: application/json
 
 {
-  "userId": "11111111-1111-1111-1111-111111111111",
+  "userId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
   "resourceId": 2,
   "startTime": "2025-09-06T12:00:00",
   "endTime": "2025-09-06T13:00:00",
