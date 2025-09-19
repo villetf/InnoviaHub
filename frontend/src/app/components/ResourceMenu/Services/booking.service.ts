@@ -45,7 +45,8 @@ export class BookingService {
     return this.http.put<BookingRead>(`${this.url}/${id}`, dto);
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.url}/${id}`);
+  delete(id: number, userId?: string): Observable<void> {
+    const params = userId ? `?userId=${userId}` : '';
+    return this.http.delete<void>(`${this.url}/${id}${params}`);
   }
 }

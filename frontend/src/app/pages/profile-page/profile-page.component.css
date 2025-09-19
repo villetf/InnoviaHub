@@ -202,6 +202,59 @@
   border-radius: 8px;
 }
 
+/* Joel's ändringar för rätt userinfo - Redigeringsformulär stilar */
+.edit-form {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--color-bg-alt, #f8f9fa);
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #dee2e6);
+}
+
+.edit-form h4 {
+  margin: 0 0 1rem 0;
+  color: var(--color-text, #333);
+  font-size: 1.1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text, #333);
+  font-size: 0.9rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border, #ced4da);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: white;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.edit-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-actions .btn {
+  margin-right: 0;
+}
+
 /* Responsiv design */
 @media (max-width: 768px) {
   .bookings-section {

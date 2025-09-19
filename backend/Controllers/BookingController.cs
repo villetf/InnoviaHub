@@ -81,6 +81,13 @@ namespace backend.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<BookingReadDto>> Update(int id, [FromBody] BookingUpdateDto dto, CancellationToken ct)
         {
+            // Joel's ändringar för rätt userinfo - Säkerhetskontroll: Användare kan endast redigera sina egna bokningar
+            var existingBooking = await _bookings.GetById(id, ct);
+            if (existingBooking is null) return NotFound();
+            
+            if (existingBooking.UserId != dto.UserId)
+                return Forbid("Du kan endast redigera dina egna bokningar");
+
             //Vallidera tid
             if(dto.EndTime <= dto.StartTime)
                 return BadRequest(new {message = "EndTime måste vara efter StartTime"});
@@ -115,6 +122,19 @@ namespace backend.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
+            // Joel's ändringar för rätt userinfo - Säkerhetskontroll: Användare kan endast radera sina egna bokningar
+            var existingBooking = await _bookings.GetById(id, ct);
+            if (existingBooking is null) return NotFound();
+            
+            // Lägg till användarkontroll genom en query parameter eller header
+            // För nu använder vi query parameter userId för säkerhet
+            if (!Request.Query.TryGetValue("userId", out var userIdString) || 
+                !Guid.TryParse(userIdString, out var userId) ||
+                existingBooking.UserId != userId)
+            {
+                return Forbid("Du kan endast radera dina egna bokningar");
+            }
+
             var ok = await _bookings.Delete(id, ct);
             return ok ? NoContent() : NotFound();
         }
