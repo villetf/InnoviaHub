@@ -75,9 +75,53 @@
             <span>{{ selectedBooking.createdAt | date:'short' }}</span>
           </div>
 
-          <div class="detail-actions">
-            <button class="btn btn-secondary">Ändra</button>
-            <button class="btn btn-danger">Radera</button>
+          <!-- Joel's ändringar för rätt userinfo - Redigering och radering UI -->
+          <div class="detail-actions" *ngIf="!isEditing">
+            <button class="btn btn-secondary" (click)="startEdit()">Ändra</button>
+            <button class="btn btn-danger" (click)="deleteBooking()">Radera</button>
+          </div>
+
+          <!-- Redigeringsformulär -->
+          <div class="edit-form" *ngIf="isEditing">
+            <h4>Redigera bokning</h4>
+            
+            <div class="form-group">
+              <label for="startTime">Starttid:</label>
+              <input 
+                type="datetime-local" 
+                id="startTime"
+                [(ngModel)]="editForm.startTime"
+                class="form-control"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="endTime">Sluttid:</label>
+              <input 
+                type="datetime-local" 
+                id="endTime"
+                [(ngModel)]="editForm.endTime"
+                class="form-control"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select 
+                id="status"
+                [(ngModel)]="editForm.status"
+                class="form-control"
+              >
+                <option value="Confirmed">Bekräftad</option>
+                <option value="Pending">Väntande</option>
+                <option value="Cancelled">Avbokad</option>
+              </select>
+            </div>
+            
+            <div class="edit-actions">
+              <button class="btn btn-primary" (click)="saveEdit()">Spara</button>
+              <button class="btn btn-secondary" (click)="cancelEdit()">Avbryt</button>
+            </div>
           </div>
         </div>
       </div>
