@@ -1,19 +1,19 @@
-<!-- Ny “card”-wrapper som matchar sidans stil -->
-<div class="rounded-2xl bg-bg-alt p-4 border border-border shadow-sm">
-  <!-- Valfri etikett ovanför kalendern -->
-  <label *ngIf="label" class="date-picker-label">{{ label }}</label>
+<!-- CHANGED: card-wrapper + custom header + kompakt kalender -->
+<div class="calendar-card">
+  <!-- CHANGED -->
+  <!-- (valfri) label ovanför -->
+  <label *ngIf="label" class="date-picker-label mb-2">{{ label }}</label>
 
-  <!-- Inline Angular Material-kalender som är synlig konstant -->
   <mat-calendar
     [selected]="selected"
     (selectedChange)="onCalendarSelected($event)"
     [minDate]="minDateAsDate"
     [maxDate]="maxDateAsDate"
+    [dateClass]="dateClass"
+    [headerComponent]="headerCmp"
     startView="month"
   >
   </mat-calendar>
-
-  <div *ngIf="disabled" class="calendar-blocker" aria-hidden="true"></div>
 </div>
 
 <!-- Ursprungs-INPUT (kommenterad bort, ersatt av mat-calendar) -->
