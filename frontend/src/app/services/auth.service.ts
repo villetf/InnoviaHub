@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MsalService, MsalBroadcastService, MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
 import { AuthenticationResult, PopupRequest, RedirectRequest, EndSessionRequest } from '@azure/msal-browser';
 import { Subject, filter, takeUntil, firstValueFrom } from 'rxjs';
 import { loginRequest } from '../auth-config';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { loginRequest } from '../auth-config';
 export class AuthService {
   private readonly _destroying$ = new Subject<void>();
   private _initialized = false;
+  private router = inject(Router);
   
   constructor(
     private msalService: MsalService,
@@ -85,7 +87,14 @@ export class AuthService {
       postLogoutRedirectUri: window.__env?.NG_APP_LOGOUT_REDIRECT_URL
     };
 
-    this.msalService.logoutPopup(logoutRequest);
+    const lsKeys = { ...localStorage };
+    for (const key in lsKeys) {
+      if (key.startsWith('msal')) {
+        localStorage.removeItem(key)
+      }
+    }
+
+    this.router.navigate(['/logga-in']);
   }
 
   isLoggedIn(): boolean {
