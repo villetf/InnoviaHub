@@ -18,6 +18,7 @@ import { BookingpageMenuComponent } from '../bookingpage-menu/bookingpage-menu.c
 import { BookingpageCalendarComponent } from '../bookingpage-calendar/bookingpage-calendar.component';
 import { BookingpageListComponent } from '../bookingpage-list/bookingpage-list.component';
 import { NavTabsComponent } from '../nav-tabs/nav-tabs.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-bookingpage-pane',
@@ -59,7 +60,8 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
     private typeApi: ResourceTypeService,
     private resourceApi: ResourceService,
     private hub: BookingHubService,
-    private bookingApi: BookingService
+    private bookingApi: BookingService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -213,25 +215,39 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
     return window.innerWidth;
   }
 
+  // Bygg dygnets gränser i lokal tid (inga "Z"-strängar)
+  private getLocalDayRange(d: Date) {
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const day = d.getDate();
+    return {
+      start: new Date(y, m, day, 0, 0, 0, 0),
+      end: new Date(y, m, day, 23, 59, 59, 999),
+    };
+  }
+
   async receiveButtonClickedFromConfirmation(e: string) {
     if (e === 'cancel') {
       this.confirmationIsVisible = false;
     } else {
       if (this.selectedDate && this.selectedResourceId) {
-        const dateIso = this.selectedDate.toISOString();
+        const { start, end } = this.getLocalDayRange(this.selectedDate);
 
-        const beginningOfDay = new Date(
-          dateIso.split('T')[0].concat('T00:00:00.000Z')
-        );
-        const endOfDay = new Date(
-          dateIso.split('T')[0].concat('T23:59:59.999Z')
-        );
+        // Get the actual logged-in user ID and name from Azure AD
+        const currentUserId = this.authService.getUserId();
+        const currentUserName = this.authService.getUserName();
+
+        if (!currentUserId) {
+          console.error('❌ Cannot create booking: User not logged in');
+          return;
+        }
 
         const newBooking: Booking = {
-          userId: '11111111-1111-1111-1111-111111111111',
+          userId: currentUserId, // Real Azure AD user ID
+          userName: currentUserName, // Real Azure AD user name
           resourceId: this.selectedResourceId,
-          startTime: beginningOfDay,
-          endTime: endOfDay,
+          startTime: start,
+          endTime: end,
           status: 'Confirmed',
         };
 

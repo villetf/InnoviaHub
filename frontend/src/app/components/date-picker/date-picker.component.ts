@@ -23,7 +23,6 @@ import {
 import { Component as NgComponent, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-date-picker',
@@ -63,17 +62,47 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
   @ViewChild(MatCalendar) calendar?: MatCalendar<Date>;
   today = new Date();
 
+  // === HELPERS (lokal, TZ-säkra) ======================================
+
+  // ADDED: Normalisera ett datum till lokal tid kl 12:00 (noon)
+  private toLocalNoon(d: Date): Date {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0, 0);
+  }
+
+  // ADDED: Bygg YYYY-MM-DD av lokala delar (utan ISO/UTC)
+  private toLocalYmd(d: Date): string {
+    const pad = (n: number, len = 2) => String(n).padStart(len, '0');
+    const y = d.getFullYear();
+    const m = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    return `${y}-${m}-${day}`;
+  }
+
+  // ADDED: Säker parse av 'YYYY-MM-DD' till lokal Date (midnatt lokalt)
+  private parseYmdLocal(ymd: string): Date | null {
+    if (!ymd) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd);
+    if (!m) return null;
+    const y = +m[1],
+      mo = +m[2] - 1,
+      d = +m[3];
+    return new Date(y, mo, d, 12, 0, 0, 0); // kl 12:00 för robusthet
+  }
+
+  // =====================================================================
+
   ngOnInit(): void {
-    // Sätt dagens datum som default och skicka det till parent
-    const currentDate = new Date();
-    this.dateChange.emit(currentDate);
+    // CHANGED: utgå från idag men normalisera till lokal noon
+    const currentDate = this.toLocalNoon(new Date()); // CHANGED
+    this.dateChange.emit(currentDate); // CHANGED (emit “safe”)
 
-    // Visa dagens datum i UI
-    this.value = currentDate.toISOString().split('T')[0];
-    this.selected = currentDate;
+    // CHANGED: visa YYYY-MM-DD byggt lokalt (ingen ISO-split)
+    this.value = this.toLocalYmd(currentDate); // CHANGED
+    this.selected = currentDate; // CHANGED
 
-    // Inaktivera tidigare datum
-    this.minDate = currentDate.toISOString().split('T')[0];
+    // CHANGED: sätt minDate som YYYY-MM-DD lokalt (visuell begränsning)
+    const min = this.toLocalYmd(new Date()); // CHANGED
+    this.minDate = min; // CHANGED
   }
 
   private onChange = (value: Date | null) => {};
@@ -81,37 +110,46 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
 
   // När användaren väljer ett datum i mat-calendar
   onCalendarSelected(date: Date | null) {
-    this.selected = date;
-    // Håll value i synk
-    this.value = date ? new Date(date).toISOString().split('T')[0] : '';
-    this.onChange(date);
-    this.dateChange.emit(date);
+    // CHANGED: normalisera val till lokal noon direkt
+    const safe = date ? this.toLocalNoon(date) : null; // CHANGED
+    this.selected = safe; // CHANGED
+
+    // CHANGED: håll value i sync som YYYY-MM-DD (lokalt)
+    this.value = safe ? this.toLocalYmd(safe) : ''; // CHANGED
+    this.onChange(safe); // CHANGED
+    this.dateChange.emit(safe); // CHANGED
     this.onTouched();
 
     // Tvinga kalenderns "activeDate" att följa det valda datumet
-    if (date && this.calendar) {
-      this.calendar.activeDate = date; // FIX
-      this.calendar.stateChanges.next(); // FIX: trigga omritning
+    if (safe && this.calendar) {
+      this.calendar.activeDate = safe;
+      this.calendar.stateChanges.next();
     }
   }
 
   // konvertera sträng-inputs till mat-calendern
   get minDateAsDate(): Date | null {
-    return this.minDate ? new Date(this.minDate) : null;
+    // CHANGED: parsa säkert till lokal Date (inte new Date('YYYY-MM-DD'))
+    return this.parseYmdLocal(this.minDate); // CHANGED
   }
 
   get maxDateAsDate(): Date | null {
-    return this.maxDate ? new Date(this.maxDate) : null;
+    // CHANGED: parsa säkert till lokal Date
+    return this.parseYmdLocal(this.maxDate); // CHANGED
   }
 
   // ControlValueAccessor implementation
   writeValue(value: Date | string | null): void {
     if (value instanceof Date) {
-      this.selected = value;
-      this.value = value.toISOString().split('T')[0];
+      // CHANGED: normalisera inkommande Date till lokal noon
+      const safe = this.toLocalNoon(value); // CHANGED
+      this.selected = safe; // CHANGED
+      this.value = this.toLocalYmd(safe); // CHANGED
     } else if (typeof value === 'string' && value) {
-      this.value = value;
-      this.selected = new Date(value);
+      // CHANGED: parsa "YYYY-MM-DD" säkert och normalisera till noon
+      const parsed = this.parseYmdLocal(value); // CHANGED
+      this.selected = parsed; // CHANGED
+      this.value = parsed ? this.toLocalYmd(parsed) : ''; // CHANGED
     } else {
       this.value = '';
       this.selected = null;
@@ -119,8 +157,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
 
     // Om vi får nytt värde utifrån, synka även activeDate
     if (this.selected && this.calendar) {
-      this.calendar.activeDate = this.selected; // FIX
-      this.calendar.stateChanges.next(); // FIX
+      this.calendar.activeDate = this.selected;
+      this.calendar.stateChanges.next();
     }
   }
 
@@ -139,16 +177,26 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit {
   // (valfritt) datum att highlighta från parent
   @Input() highlightedDates: Array<Date | string> = [];
 
-  // Hjälpare: normalisera datum till yyyy-mm-dd för jämförelse
+  // CHANGED: normalisera till lokal YYYY-MM-DD utan ISO/UTC
   private normalize(d: Date): string {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate())
-      .toISOString()
-      .slice(0, 10);
+    // CHANGED
+    const localMid = new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      12,
+      0,
+      0,
+      0
+    );
+    return this.toLocalYmd(localMid);
   }
+
   private isHighlighted(d: Date): boolean {
     const dayStr = this.normalize(d);
     return this.highlightedDates.some((x) => {
-      const asDate = typeof x === 'string' ? new Date(x) : x;
+      const asDate =
+        typeof x === 'string' ? this.parseYmdLocal(x) ?? new Date(x) : x;
       return this.normalize(asDate) === dayStr;
     });
   }

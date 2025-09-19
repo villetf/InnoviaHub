@@ -35,8 +35,11 @@ namespace backend.Controllers
             var resIds = resources.Select(r => r.Id).ToList();
 
             //Hämta bokningar för dessa resurser
+            // Filtrera redan i SQL och jämför i UTC (halvöppet intervall)
             var bookings = await _db.Bookings
-                .Where(b => resIds.Contains(b.ResourceId))
+                .Where(b => resIds.Contains(b.ResourceId)
+                        && b.StartTime < e
+                        && b.EndTime   > s)
                 .AsNoTracking()
                 .ToListAsync(ct);
 
