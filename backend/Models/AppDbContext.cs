@@ -45,25 +45,6 @@ public class AppDbContext : DbContext
          new Resource { Id = 6, Name = "AI-server 1", ResourceTypeId = 4 }
       );
 
-      modelBuilder.Entity<Booking>().HasData(
-         new Booking
-         {
-            Id = 1,
-            UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-            ResourceId = 1,
-            StartTime = DateTime.Now.AddHours(1),
-            EndTime = DateTime.Now.AddHours(2),
-            Status = "Confirmed"
-         },
-         new Booking
-         {
-            Id = 2,
-            UserId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-            ResourceId = 3,
-            StartTime = DateTime.Now.AddHours(3),
-            EndTime = DateTime.Now.AddHours(4),
-            Status = "Confirmed"
-         }
-      );
+      // No initial booking data - will be created when users make bookings
    }
 }

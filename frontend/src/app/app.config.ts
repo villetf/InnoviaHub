@@ -44,8 +44,9 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   return {
     interactionType: InteractionType.Popup,
     protectedResourceMap: new Map([
-      [protectedResources.graphApi.endpoint, protectedResources.graphApi.scopes],
-      [protectedResources.innoviaApi.endpoint, protectedResources.innoviaApi.scopes]
+      [protectedResources.graphApi.endpoint, protectedResources.graphApi.scopes]
+      // Temporarily removed innoviaApi to avoid token auth issues
+      // [protectedResources.innoviaApi.endpoint, protectedResources.innoviaApi.scopes]
     ])
   };
 }

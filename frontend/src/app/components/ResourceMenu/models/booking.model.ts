@@ -1,5 +1,6 @@
 export type Booking = {
   userId: string;
+  userName?: string;
   resourceId: number;
   startTime: Date;
   endTime: Date;
@@ -9,6 +10,7 @@ export type Booking = {
 export interface BookingRead {
   id: number;
   userId: string;
+  userName?: string;
   resourceId: number;
   resourceName?: string;
   startTime: string; // ISO
@@ -19,6 +21,7 @@ export interface BookingRead {
 
 export interface BookingUpdateDto {
   userId: string;
+  userName?: string;
   resourceId: number;
   startTime: string; // ISO
   endTime: string; // ISO

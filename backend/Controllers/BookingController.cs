@@ -2,11 +2,13 @@ using backend.Models;
 using backend.Models.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous] // Tillåt anonyma anrop för test
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookings;
@@ -35,6 +37,15 @@ namespace backend.Controllers
             return Ok(ToReadDto(b));
         }
 
+        //GET api/booking/user/{userId}
+        [HttpGet("user/{userId:guid}")]
+        public async Task<ActionResult<IEnumerable<BookingReadDto>>> GetByUserId(Guid userId, CancellationToken ct)
+        {
+            var all = await _bookings.GetAll(ct);
+            var userBookings = all.Where(b => b.UserId == userId);
+            return Ok(userBookings.Select(b => ToReadDto(b)));
+        }
+
         //POST api/booking
         [HttpPost]
         public async Task<ActionResult<BookingReadDto>> Create([FromBody] BookingCreateDto dto, CancellationToken ct)
@@ -55,6 +66,7 @@ namespace backend.Controllers
             var booking = new Booking
             {
                 UserId = dto.UserId,
+                UserName = dto.UserName,
                 ResourceId = dto.ResourceId,
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,
@@ -85,6 +97,7 @@ namespace backend.Controllers
             {
                 Id = id,
                 UserId = dto.UserId,
+                UserName = dto.UserName,
                 ResourceId = dto.ResourceId,
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,
@@ -111,7 +124,7 @@ namespace backend.Controllers
 
         //Konvertera enititet till DTO
         private static BookingReadDto ToReadDto(Booking b) =>
-            new(b.Id, b.UserId, b.ResourceId, b.Resource?.Name ?? "", b.StartTime, b.EndTime, b.Status, b.CreatedAt);
+            new(b.Id, b.UserId, b.UserName, b.ResourceId, b.Resource?.Name ?? "", b.StartTime, b.EndTime, b.Status, b.CreatedAt);
 
     }
 }

@@ -7,6 +7,7 @@ public class Booking
 {
    public int Id { get; set; }
    public required Guid UserId { get; set; }
+   public string? UserName { get; set; } // User's display name from Azure AD
    public required int ResourceId { get; set; }
    public Resource? Resource { get; set; }
    public required DateTime StartTime { get; set; }

@@ -1,5 +1,87 @@
 <div class="page-container">
   <div class="page-container__inner">
-    <p>profile-page works!</p>
+    
+    <!-- Användarinfo sektion -->
+    <div class="user-info">
+      <div class="user-avatar">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+      <div class="user-details">
+        <h2>{{ userName }}</h2>
+        <p>{{ userEmail }}</p>
+      </div>
+    </div>
+
+    <!-- Filter knappar (likt din design) -->
+    <div class="filter-buttons">
+      <button class="filter-btn active">Alla bokningar</button>
+      <button class="filter-btn">Alla sensorer</button>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="loading">
+      Laddar dina bokningar...
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Bokningar sektion -->
+    <div class="bookings-section" *ngIf="!isLoading && !errorMessage">
+      
+      <!-- Bokningslista (vänster sida) -->
+      <div class="bookings-list">
+        <h3 *ngIf="bookings.length === 0">Inga bokningar hittades</h3>
+        
+        <div 
+          *ngFor="let booking of bookings" 
+          class="booking-item"
+          [class.selected]="selectedBooking?.id === booking.id"
+          (click)="selectBooking(booking)"
+        >
+          <div class="booking-title">{{ booking.resourceName }}</div>
+          <div class="booking-date">{{ booking.startTime | date:'shortDate' }}</div>
+          <div class="booking-time">{{ booking.startTime | date:'shortTime' }} - {{ booking.endTime | date:'shortTime' }}</div>
+          <div class="booking-status">{{ booking.status }}</div>
+        </div>
+      </div>
+
+      <!-- Bokningsdetaljer (höger sida) -->
+      <div class="booking-details" *ngIf="selectedBooking">
+        <div class="details-card">
+          <h3>{{ selectedBooking.resourceName }}</h3>
+          
+          <div class="detail-row">
+            <strong>Tid:</strong>
+            <span>{{ selectedBooking.startTime | date:'shortTime' }} - {{ selectedBooking.endTime | date:'shortTime' }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <strong>Datum:</strong>
+            <span>{{ selectedBooking.startTime | date:'longDate' }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <strong>Status:</strong>
+            <span>{{ selectedBooking.status }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <strong>Bokad:</strong>
+            <span>{{ selectedBooking.createdAt | date:'short' }}</span>
+          </div>
+
+          <div class="detail-actions">
+            <button class="btn btn-secondary">Ändra</button>
+            <button class="btn btn-danger">Radera</button>
+          </div>
+        </div>
+      </div>
+      
+    </div>
   </div>
 </div>
