@@ -16,7 +16,6 @@ export class BookingService {
 
   constructor(private http: HttpClient, private cfg: AppConfigService) {
     this.url = `${this.cfg.apiUrl}/api/booking`;
-    // this.url = `http://172.162.241.249:5184/api/booking`;
   }
 
   postNewBooking(booking: any): Observable<any> {
@@ -46,7 +45,8 @@ export class BookingService {
     return this.http.put<BookingRead>(`${this.url}/${id}`, dto);
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.url}/${id}`);
+  delete(id: number, userId?: string): Observable<void> {
+    const params = userId ? `?userId=${userId}` : '';
+    return this.http.delete<void>(`${this.url}/${id}${params}`);
   }
 }

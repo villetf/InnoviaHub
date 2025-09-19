@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   async login(): Promise<void> {
-    console.log('� Login method called');
+    console.log('🔐 Login method called');
     
     if (!this.msalService) {
       console.error('❌ MSAL Service is not available');
@@ -53,6 +53,9 @@ export class AuthService {
       await this.initializeMsal();
       
       console.log('🚀 Attempting login popup...');
+      console.log('📋 Login request config:', loginRequest);
+      console.log('🌐 Environment config:', window.__env);
+      
       const result = await firstValueFrom(this.msalService.loginPopup(loginRequest));
       
       console.log('✅ Login successful', result);
@@ -63,6 +66,17 @@ export class AuthService {
       
     } catch (error) {
       console.error('❌ Login failed', error);
+      
+      // Försök med redirect som fallback
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
+        console.log('🔄 Popup blocked, trying redirect...');
+        try {
+          await firstValueFrom(this.msalService.loginRedirect(loginRequest));
+        } catch (redirectError) {
+          console.error('❌ Redirect login also failed:', redirectError);
+        }
+      }
     }
   }
 
@@ -77,7 +91,7 @@ export class AuthService {
   isLoggedIn(): boolean {
     try {
       const accounts = this.msalService.instance.getAllAccounts();
-      console.log('🔍 Checking login status, accounts:', accounts);
+      // Removed debug logging to prevent spam
       return accounts.length > 0;
     } catch (error) {
       console.error('❌ Error checking login status:', error);
@@ -88,7 +102,7 @@ export class AuthService {
   getActiveAccount() {
     try {
       const activeAccount = this.msalService.instance.getActiveAccount();
-      console.log('🔍 Getting active account:', activeAccount);
+      // Removed debug logging to prevent spam
       return activeAccount;
     } catch (error) {
       console.error('❌ Error getting active account:', error);
@@ -98,10 +112,9 @@ export class AuthService {
 
   getUserName(): string {
     const account = this.getActiveAccount();
-    console.log('👤 Getting user name, account:', account);
+    // Removed debug logging to prevent spam
     
     if (!account) {
-      console.log('❌ No active account found');
       return 'No Account';
     }
 
@@ -114,19 +127,24 @@ export class AuthService {
                  (account.idTokenClaims?.['family_name'] as string) ||
                  'Unknown User';
     
-    console.log('👤 User name found:', name);
-    console.log('👤 Account properties:', {
-      name: account.name,
-      username: account.username,
-      idTokenClaims: account.idTokenClaims
-    });
-    
     return name;
   }
 
   getUserId(): string {
     const account = this.getActiveAccount();
-    return account?.homeAccountId || '';
+    // Only log when debugging is specifically needed
+    
+    if (!account) {
+      return '';
+    }
+
+    // Använd Object ID (oid) från token claims som är det korrekta GUID:et
+    const userId = account.idTokenClaims?.['oid'] as string || 
+                   account.localAccountId || 
+                   account.homeAccountId || 
+                   '';
+    
+    return userId;
   }
 
   getUserRoles(): string[] {
