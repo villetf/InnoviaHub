@@ -16,7 +16,6 @@ export class BookingService {
 
   constructor(private http: HttpClient, private cfg: AppConfigService) {
     this.url = `${this.cfg.apiUrl}/api/booking`;
-    // this.url = `http://172.162.241.249:5184/api/booking`;
   }
 
   postNewBooking(booking: any): Observable<any> {

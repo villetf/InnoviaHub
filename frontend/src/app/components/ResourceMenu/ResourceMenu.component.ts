@@ -15,6 +15,7 @@ import { ButtonComponent } from '../button/button.component';
 import { BookingConfirmationPopupComponent } from '../booking-confirmation-popup/booking-confirmation-popup.component';
 import { BookingService } from './Services/booking.service';
 import { Booking } from './models/booking.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-resource-type-menu',
@@ -53,7 +54,8 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
     private typeApi: ResourceTypeService,
     private resourceApi: ResourceService,
     private hub: BookingHubService,
-    private bookingApi: BookingService
+    private bookingApi: BookingService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -219,9 +221,18 @@ export class ResourceTypeMenuComponent implements OnInit, OnDestroy {
 
         // -----------------------------------------------------------------
 
+        // Get the actual logged-in user ID and name from Azure AD
+        const currentUserId = this.authService.getUserId();
+        const currentUserName = this.authService.getUserName();
+        
+        if (!currentUserId) {
+          console.error('❌ Cannot create booking: User not logged in');
+          return;
+        }
+
         const newBooking: Booking = {
-          // TODO: Riktig userId ska användas
-          userId: '11111111-1111-1111-1111-111111111111', // TEMP
+          userId: currentUserId, // Real Azure AD user ID
+          userName: currentUserName, // Real Azure AD user name
           resourceId: this.selectedResourceId,
           startTime: beginningOfDay,
           endTime: endOfDay,

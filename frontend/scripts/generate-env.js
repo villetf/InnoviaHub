@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 require("dotenv").config(); //Läser env om den finns
 
-//Fallback
+//Fallback (temporarily using HTTP to avoid SSL issues)
 const DEFAULT_API = "http://localhost:5184";
 const DEFAULT_HUB = "ws://localhost:5184/hubs/bookings";
 const DEFAULT_LOGIN_REDIRECT = "http://localhost:4200/profil";
