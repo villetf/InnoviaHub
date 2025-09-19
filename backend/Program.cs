@@ -30,7 +30,7 @@ builder.Services.AddOpenApi();
 
 
 // För att använda inMemory-databas, sätt useInMemory till true
-var useInMemory = true;
+var useInMemory = false;
 
 if (useInMemory)
 {
@@ -85,7 +85,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 // Joel's ändringar för rätt userinfo - SignalR hub för realtidsuppdateringar av bokningar
-app.MapHub<BookingHub>("/hubs/bookings");
+app.MapHub<BookingHub>("/hubs/bookings").RequireCors("ng");
 
 app.Run();
 

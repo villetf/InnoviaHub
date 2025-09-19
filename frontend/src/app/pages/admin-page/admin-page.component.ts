@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { NavTabsComponent } from '../../components/nav-tabs/nav-tabs.component';
 import { BookingPaneComponent } from '../../components/booking-pane/booking-pane.component';
-import { ResourceTypeMenuComponent } from '../../components/ResourceMenu/ResourceMenu.component';
 import { ResourcesPaneComponent } from '../../components/resources-pane/resources-pane.component';
 
 @Component({
@@ -10,7 +9,6 @@ import { ResourcesPaneComponent } from '../../components/resources-pane/resource
     NavTabsComponent,
     ResourcesPaneComponent,
     BookingPaneComponent,
-    ResourceTypeMenuComponent,
     ResourcesPaneComponent,
   ],
   templateUrl: './admin-page.component.html',

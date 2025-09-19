@@ -50,6 +50,10 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<BookingReadDto>> Create([FromBody] BookingCreateDto dto, CancellationToken ct)
         {
+            //Normalisera till UTC för stabilitet i frontend innan riktig tid används
+            var startUtc = DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
+            var endUtc   = DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
+
             //Vallidera tid
             if(dto.EndTime <= dto.StartTime)
                 return BadRequest(new {message = "EndTime måste vara efter StartTime"});
@@ -68,8 +72,8 @@ namespace backend.Controllers
                 UserId = dto.UserId,
                 UserName = dto.UserName,
                 ResourceId = dto.ResourceId,
-                StartTime = dto.StartTime,
-                EndTime = dto.EndTime,
+                StartTime = startUtc,
+                EndTime = startUtc,
                 Status = string.IsNullOrWhiteSpace(dto.Status) ? "Confirmed" : dto.Status
             };
 
@@ -81,6 +85,10 @@ namespace backend.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<BookingReadDto>> Update(int id, [FromBody] BookingUpdateDto dto, CancellationToken ct)
         {
+            //Normalisera till UTC för stabilitet i frontend innan riktig tid används
+            var startUtc = DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
+            var endUtc   = DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
+
             // Joel's ändringar för rätt userinfo - Säkerhetskontroll: Användare kan endast redigera sina egna bokningar
             var existingBooking = await _bookings.GetById(id, ct);
             if (existingBooking is null) return NotFound();
@@ -106,8 +114,8 @@ namespace backend.Controllers
                 UserId = dto.UserId,
                 UserName = dto.UserName,
                 ResourceId = dto.ResourceId,
-                StartTime = dto.StartTime,
-                EndTime = dto.EndTime,
+                StartTime = startUtc,
+                EndTime = startUtc,
                 Status = string.IsNullOrWhiteSpace(dto.Status) ? "Confirmed" : dto.Status
             };
 
