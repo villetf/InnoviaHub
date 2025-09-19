@@ -1,14 +1,14 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from '../button/button.component';
 import { Booking } from '../ResourceMenu/models/booking.model';
 import { BookingService } from '../ResourceMenu/Services/booking.service';
 import { BookingConfirmationPopupComponent } from '../booking-confirmation-popup/booking-confirmation-popup.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-bookingpage-list',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, BookingConfirmationPopupComponent],
+  imports: [CommonModule, BookingConfirmationPopupComponent],
   templateUrl: './bookingpage-list.component.html',
 })
 export class BookingpageListComponent {
@@ -26,14 +26,15 @@ export class BookingpageListComponent {
     isAvailable: boolean;
   }>();
 
-  //UI-state
+  // UI-state
   confirmationIsVisible = false;
   isBooked = false;
   errorMessage = '';
 
   private bookingApi = inject(BookingService);
+  private authService = inject(AuthService);
 
-  //Namn på vald resurs
+  // Namn på vald resurs (för felmeddelanden i UI)
   get selectedResourceName(): string | null {
     const r = this.resources?.find(
       (x: any) => x.id === this.selectedResourceId
@@ -42,7 +43,7 @@ export class BookingpageListComponent {
   }
 
   handleClickBook() {
-    const screenWidth = this.getCurrentScreenWidth();
+    const screenWidth = window.innerWidth;
 
     // Mobile: guida användaren till saknade steg
     if (screenWidth < 768) {
@@ -59,38 +60,37 @@ export class BookingpageListComponent {
     if (!this.selectedTypeId || !this.selectedDate || !this.selectedResourceId)
       return;
 
-    // Visa popup för bekräftelse
-    this.isBooked = false; //Startar ny bokning i "bekräfta" läge
+    //nollställ och visa popup
+    this.isBooked = false;
+    this.errorMessage = '';
     this.confirmationIsVisible = true;
   }
 
-  // Mottag från bekräftelse-popup
+  // Bokningsflöde synkat med bookingpage-pane
   async receiveButtonClickedFromConfirmation(e: string) {
-    if (e === 'cancel') {
-      this.confirmationIsVisible = false;
-      this.isBooked = false;
-      return;
-    }
-
-    if (e === 'stay') {
+    if (e === 'cancel' || e === 'stay') {
       this.confirmationIsVisible = false;
       this.isBooked = false;
       return;
     }
 
     if (this.selectedDate && this.selectedResourceId) {
-      const dateIso = this.selectedDate.toISOString();
-      const beginningOfDay = new Date(
-        dateIso.split('T')[0].concat('T00:00:00.000Z')
-      );
-      const endOfDay = new Date(dateIso.split('T')[0].concat('T23:59:59.999Z'));
+      const { start, end } = this.getLocalDayRange(this.selectedDate);
+
+      const currentUserId = this.authService.getUserId();
+      const currentUserName = this.authService.getUserName();
+
+      if (!currentUserId) {
+        console.error('❌ Cannot create booking: User not logged in');
+        return;
+      }
 
       const newBooking: Booking = {
-        // TODO: riktig userId
-        userId: '11111111-1111-1111-1111-111111111111',
+        userId: currentUserId,
+        userName: currentUserName,
         resourceId: this.selectedResourceId,
-        startTime: beginningOfDay,
-        endTime: endOfDay,
+        startTime: start,
+        endTime: end,
         status: 'Confirmed',
       };
 
@@ -120,14 +120,14 @@ export class BookingpageListComponent {
     );
   }
 
-  // Hjälpmetoder
-  getCurrentScreenWidth() {
-    return window.innerWidth;
-  }
-
-  resetAllStates() {
-    this.isBooked = false;
-    this.confirmationIsVisible = false;
-    this.errorMessage = '';
+  //Lokal dagsintervall
+  private getLocalDayRange(d: Date) {
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const day = d.getDate();
+    return {
+      start: new Date(y, m, day, 0, 0, 0, 0),
+      end: new Date(y, m, day, 23, 59, 59, 999),
+    };
   }
 }

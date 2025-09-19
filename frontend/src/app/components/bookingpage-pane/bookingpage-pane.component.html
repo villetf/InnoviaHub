@@ -16,7 +16,7 @@
     <!-- Vänster: Kalender -->
     <app-bookingpage-calendar
       class="col-span-12 md:col-span-5 lg:col-span-5"
-      (dateSelected)="receiveSelectedDateFromDatePicker($event)"
+      (daySelected)="onDaySelected($event)"
     ></app-bookingpage-calendar>
 
     <!-- Divider (md+) -->
