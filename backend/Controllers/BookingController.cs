@@ -2,11 +2,13 @@ using backend.Models;
 using backend.Models.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous] // Tillåt anonyma anrop för test
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookings;
@@ -35,10 +37,23 @@ namespace backend.Controllers
             return Ok(ToReadDto(b));
         }
 
+        //GET api/booking/user/{userId}
+        [HttpGet("user/{userId:guid}")]
+        public async Task<ActionResult<IEnumerable<BookingReadDto>>> GetByUserId(Guid userId, CancellationToken ct)
+        {
+            var all = await _bookings.GetAll(ct);
+            var userBookings = all.Where(b => b.UserId == userId);
+            return Ok(userBookings.Select(b => ToReadDto(b)));
+        }
+
         //POST api/booking
         [HttpPost]
         public async Task<ActionResult<BookingReadDto>> Create([FromBody] BookingCreateDto dto, CancellationToken ct)
         {
+            //Normalisera till UTC för stabilitet i frontend innan riktig tid används
+            var startUtc = DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
+            var endUtc   = DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
+
             //Vallidera tid
             if(dto.EndTime <= dto.StartTime)
                 return BadRequest(new {message = "EndTime måste vara efter StartTime"});
@@ -55,9 +70,10 @@ namespace backend.Controllers
             var booking = new Booking
             {
                 UserId = dto.UserId,
+                UserName = dto.UserName,
                 ResourceId = dto.ResourceId,
-                StartTime = dto.StartTime,
-                EndTime = dto.EndTime,
+                StartTime = startUtc,
+                EndTime = startUtc,
                 Status = string.IsNullOrWhiteSpace(dto.Status) ? "Confirmed" : dto.Status
             };
 
@@ -69,6 +85,17 @@ namespace backend.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<BookingReadDto>> Update(int id, [FromBody] BookingUpdateDto dto, CancellationToken ct)
         {
+            //Normalisera till UTC för stabilitet i frontend innan riktig tid används
+            var startUtc = DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
+            var endUtc   = DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
+
+            // Joel's ändringar för rätt userinfo - Säkerhetskontroll: Användare kan endast redigera sina egna bokningar
+            var existingBooking = await _bookings.GetById(id, ct);
+            if (existingBooking is null) return NotFound();
+            
+            if (existingBooking.UserId != dto.UserId)
+                return Forbid("Du kan endast redigera dina egna bokningar");
+
             //Vallidera tid
             if(dto.EndTime <= dto.StartTime)
                 return BadRequest(new {message = "EndTime måste vara efter StartTime"});
@@ -85,9 +112,10 @@ namespace backend.Controllers
             {
                 Id = id,
                 UserId = dto.UserId,
+                UserName = dto.UserName,
                 ResourceId = dto.ResourceId,
-                StartTime = dto.StartTime,
-                EndTime = dto.EndTime,
+                StartTime = startUtc,
+                EndTime = startUtc,
                 Status = string.IsNullOrWhiteSpace(dto.Status) ? "Confirmed" : dto.Status
             };
 
@@ -102,6 +130,19 @@ namespace backend.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
+            // Joel's ändringar för rätt userinfo - Säkerhetskontroll: Användare kan endast radera sina egna bokningar
+            var existingBooking = await _bookings.GetById(id, ct);
+            if (existingBooking is null) return NotFound();
+            
+            // Lägg till användarkontroll genom en query parameter eller header
+            // För nu använder vi query parameter userId för säkerhet
+            if (!Request.Query.TryGetValue("userId", out var userIdString) || 
+                !Guid.TryParse(userIdString, out var userId) ||
+                existingBooking.UserId != userId)
+            {
+                return Forbid("Du kan endast radera dina egna bokningar");
+            }
+
             var ok = await _bookings.Delete(id, ct);
             return ok ? NoContent() : NotFound();
         }
@@ -111,7 +152,7 @@ namespace backend.Controllers
 
         //Konvertera enititet till DTO
         private static BookingReadDto ToReadDto(Booking b) =>
-            new(b.Id, b.UserId, b.ResourceId, b.Resource?.Name ?? "", b.StartTime, b.EndTime, b.Status, b.CreatedAt);
+            new(b.Id, b.UserId, b.UserName, b.ResourceId, b.Resource?.Name ?? "", b.StartTime, b.EndTime, b.Status, b.CreatedAt);
 
     }
 }

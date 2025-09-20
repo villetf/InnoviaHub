@@ -1,0 +1,41 @@
+<!-- WRAPPER -->
+<div class="mx-auto max-w-7xl text-text">
+  <h1 class="mb-4 text-2xl font-bold text-heading">Bokning</h1>
+
+  <!-- MENY-KORT -->
+  <div class="rounded-2xl p-3 mb-6">
+    <app-bookingpage-menu
+      [types]="types"
+      [selectedTypeId]="selectedTypeId"
+      (selectType)="selectType($event)"
+    ></app-bookingpage-menu>
+  </div>
+
+  <!-- INNEHÅLL: 12-kolumners layout med kalender vänster och lista höger -->
+  <div class="grid grid-cols-12 gap-6">
+    <!-- Vänster: Kalender -->
+    <app-bookingpage-calendar
+      class="col-span-12 md:col-span-5 lg:col-span-5"
+      (daySelected)="onDaySelected($event)"
+    ></app-bookingpage-calendar>
+
+    <!-- Divider (md+) -->
+    <div class="hidden md:block md:col-span-1">
+      <div class="h-full w-px bg-border mx-auto"></div>
+    </div>
+
+    <!-- Höger: Listan -->
+    <app-bookingpage-list
+      class="col-span-12 md:col-span-6 lg:col-span-6"
+      [loading]="loading"
+      [error]="error"
+      [resources]="resources"
+      [selectedResourceId]="selectedResourceId"
+      [selectedTypeId]="selectedTypeId"
+      [selectedDate]="selectedDate"
+      (selectResource)="
+        selectResource($event.id, $event.name, $event.isAvailable)
+      "
+    ></app-bookingpage-list>
+  </div>
+</div>

@@ -14,10 +14,16 @@ export class BookingListComponent {
   @Input() selectedId: number | null = null;
   @Input() loading: boolean = false;
   @Input() error: string = '';
+  @Input() search: string = '';
 
   bookingSelected = output<number>();
+  searchChange = output<string>();
 
   shortGuid(guid: string) {
     return guid?.length > 10 ? `${guid.slice(0, 8)}…${guid.slice(-4)}` : guid;
+  }
+
+  onSearchInput(value: string) {
+    this.searchChange.emit(value);
   }
 }

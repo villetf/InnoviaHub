@@ -1,14 +1,13 @@
-<div class="date-picker-container">
-  <label *ngIf="label" class="date-picker-label">{{ label }}</label>
-  <input
-    type="date"
-    class="date-picker-input"
-    [value]="value"
-    [placeholder]="placeholder"
-    [min]="minDate"
-    [max]="maxDate"
-    [disabled]="disabled"
-    (input)="onDateInput($event)"
-    (blur)="onTouched()"
-  />
+<div class="calendar-card">
+  <mat-calendar
+    [selected]="selected"
+    [startAt]="selected ?? today"
+    (selectedChange)="onCalendarSelected($event)"
+    [minDate]="minDateAsDate"
+    [maxDate]="maxDateAsDate"
+    [dateClass]="dateClass"
+    [headerComponent]="headerCmp"
+    startView="month"
+  >
+  </mat-calendar>
 </div>
