@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using backend.Models.Entities;
 
 namespace backend.Models;
@@ -8,6 +9,7 @@ public class Booking
 {
    public int Id { get; set; }
    public required Guid UserId { get; set; } // Azure AD Object ID (oid)
+   [NotMapped]
    public string? UserName { get; set; } // Joel's ändringar: User's display name from Azure AD
    public required int ResourceId { get; set; }
    public Resource? Resource { get; set; }

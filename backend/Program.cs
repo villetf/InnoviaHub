@@ -65,6 +65,7 @@ builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 
 var app = builder.Build();
 
+
 // Joel's ändringar för rätt userinfo - CORS måste aktiveras före andra middleware
 app.UseCors("ng");
 
@@ -72,10 +73,6 @@ app.UseCors("ng");
 if (app.Environment.IsDevelopment())
 {
    app.MapOpenApi();
-}
-else
-{
-   app.UseHttpsRedirection();
 }
 
 // Joel's ändringar för rätt userinfo - Authentication och Authorization middleware för Azure AD
