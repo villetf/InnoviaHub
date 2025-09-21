@@ -65,13 +65,6 @@ builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 
 var app = builder.Build();
 
-app.Use(async (context, next) =>
-{
-    var origin = context.Request.Headers["Origin"].ToString();
-    var method = context.Request.Method;
-    Console.WriteLine($"[CORS DEBUG] {method} {context.Request.Path} from Origin: {origin}");
-    await next();
-});
 
 // Joel's ändringar för rätt userinfo - CORS måste aktiveras före andra middleware
 app.UseCors("ng");
