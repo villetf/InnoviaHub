@@ -49,7 +49,8 @@ else
 // Joel's ändringar för rätt userinfo - CORS för att tillåta frontend att anropa API
 builder.Services.AddCors(opt => {
    opt.AddPolicy("ng", p => p
-      .WithOrigins("http://localhost:4200", "https://innoviahub-app-6hrgl.ondigitalocean.app")
+      // .WithOrigins("http://localhost:4200", "https://innoviahub-app-6hrgl.ondigitalocean.app")
+      .AllowAnyOrigin()
       .AllowAnyHeader()
       .AllowAnyMethod()
       .AllowCredentials()
@@ -66,15 +67,6 @@ builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 var app = builder.Build();
 
 
-app.Use(async (context, next) =>
-{
-   if (context.Request.Headers.ContainsKey("Origin"))
-   {
-      var origin = context.Request.Headers["Origin"].ToString();
-      Console.WriteLine($"[CORS DEBUG] Request from Origin: {origin}");
-   }
-   await next();
-});
 
 // Joel's ändringar för rätt userinfo - CORS måste aktiveras före andra middleware
 app.UseCors("ng");
