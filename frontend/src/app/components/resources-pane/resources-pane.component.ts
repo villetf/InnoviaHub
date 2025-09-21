@@ -28,9 +28,8 @@ import { ButtonComponent } from '../button/button.component';
     FormsModule,
     ReactiveFormsModule,
     ResourcesListComponent,
-    ResourcesDetailsComponent,
-    ButtonComponent,
-  ],
+    ResourcesDetailsComponent
+],
   templateUrl: './resources-pane.component.html',
 })
 export class ResourcesPaneComponent implements OnInit {

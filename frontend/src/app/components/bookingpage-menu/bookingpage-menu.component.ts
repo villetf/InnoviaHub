@@ -9,7 +9,7 @@ import {
 @Component({
   selector: 'app-bookingpage-menu',
   standalone: true,
-  imports: [CommonModule, NavTabsComponent],
+  imports: [CommonModule],
   templateUrl: './bookingpage-menu.component.html',
 })
 export class BookingpageMenuComponent {
