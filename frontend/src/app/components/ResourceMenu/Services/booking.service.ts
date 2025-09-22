@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { AppConfigService } from '../../../core/app-config.service';
 import { catchError, Observable, throwError } from 'rxjs';
 import {
@@ -7,6 +7,7 @@ import {
   BookingUpdateDto,
 } from '../models/booking.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from '../../../services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class BookingService {
     this.url = `${this.cfg.apiUrl}/api/booking`;
   }
 
-  postNewBooking(booking: any): Observable<any> {
+  postNewBooking(booking: Booking): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

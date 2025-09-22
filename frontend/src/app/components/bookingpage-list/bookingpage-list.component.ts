@@ -97,6 +97,9 @@ export class BookingpageListComponent {
   }
 
   postNewBooking(booking: Booking) {
+    if (!this.authService.isAdmin() && !this.authService.isUser())
+      return console.error('Unauthorized');
+
     this.bookingApi.postNewBooking(booking).subscribe(
       (response: HttpResponse<any>) => {
         if (response.status > 201) {
