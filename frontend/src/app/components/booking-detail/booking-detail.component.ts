@@ -58,8 +58,7 @@ export class BookingDetailComponent implements OnChanges {
   load() {
     this.error = '';
 
-    if (!this.authService.isAdmin() && !this.authService.isUser())
-      return console.error('Unauthorized');
+    if (!this.authService.isAdmin()) return console.error('Unauthorized');
 
     if (!this.bookingId) {
       this.booking = undefined;
@@ -95,8 +94,7 @@ export class BookingDetailComponent implements OnChanges {
   }
 
   save() {
-    if (!this.authService.isAdmin() && !this.authService.isUser())
-      return console.error('Unauthorized');
+    if (!this.authService.isAdmin()) return console.error('Unauthorized');
 
     if (!this.booking) return;
     if (this.form.invalid) {
@@ -140,8 +138,7 @@ export class BookingDetailComponent implements OnChanges {
   }
 
   remove() {
-    if (!this.authService.isAdmin() && !this.authService.isUser())
-      return console.error('Unauthorized');
+    if (!this.authService.isAdmin()) return console.error('Unauthorized');
 
     if (!this.booking) return;
     if (!confirm('Radera bokningen?')) return;
