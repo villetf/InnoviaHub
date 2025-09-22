@@ -135,7 +135,8 @@ export class BookingDetailComponent implements OnChanges {
     if (!confirm('Radera bokningen?')) return;
     this.loading = true;
     this.error = '';
-    this.api.delete(this.booking.id).subscribe({
+
+    this.api.delete(this.booking.id, this.booking.userId as any).subscribe({
       next: () => this.deleted.emit(),
       error: (err) => {
         this.error = 'Kunde inte radera';
