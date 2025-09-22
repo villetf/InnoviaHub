@@ -4,6 +4,7 @@ import { Booking } from '../ResourceMenu/models/booking.model';
 import { BookingService } from '../ResourceMenu/Services/booking.service';
 import { BookingConfirmationPopupComponent } from '../booking-confirmation-popup/booking-confirmation-popup.component';
 import { AuthService } from '../../services/auth.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-bookingpage-list',
@@ -25,9 +26,7 @@ export class BookingpageListComponent {
     name: string;
     isAvailable: boolean;
   }>();
-
-  // Används för auktorisering med roller
-  // roles: string[] | undefined;
+  @Output() bookingCommitted = new EventEmitter<void>(); // meddela parent efter lyckad bokning
 
   // UI-state
   confirmationIsVisible = false;
@@ -37,11 +36,6 @@ export class BookingpageListComponent {
   private bookingApi = inject(BookingService);
   private authService = inject(AuthService);
 
-  // constructor() {
-  //   this.roles = this.authService.getUserRoles();
-  // }
-
-  // Namn på vald resurs (för felmeddelanden i UI)
   get selectedResourceName(): string | null {
     const r = this.resources?.find(
       (x: any) => x.id === this.selectedResourceId
@@ -54,26 +48,24 @@ export class BookingpageListComponent {
 
     // Mobile: guida användaren till saknade steg
     if (screenWidth < 768) {
-      if (!this.selectedTypeId) {
+      if (!this.selectedTypeId)
         return document.getElementById('resourceType')?.scrollIntoView();
-      } else if (!this.selectedDate) {
+      else if (!this.selectedDate)
         return document.getElementById('calendar')?.scrollIntoView();
-      } else if (!this.selectedResourceId) {
+      else if (!this.selectedResourceId)
         return document.getElementById('resourceList')?.scrollIntoView();
-      }
     }
 
     // Desktop: kräver alla val
     if (!this.selectedTypeId || !this.selectedDate || !this.selectedResourceId)
       return;
 
-    //nollställ och visa popup
+    // nollställ och visa popup
     this.isBooked = false;
     this.errorMessage = '';
     this.confirmationIsVisible = true;
   }
 
-  // Bokningsflöde synkat med bookingpage-pane
   async receiveButtonClickedFromConfirmation(e: string) {
     if (e === 'cancel' || e === 'stay') {
       this.confirmationIsVisible = false;
@@ -82,11 +74,10 @@ export class BookingpageListComponent {
     }
 
     if (this.selectedDate && this.selectedResourceId) {
-      const { start, end } = this.getLocalDayRange(this.selectedDate);
+      const { start, end } = this.getUtcDayRange(this.selectedDate);
 
       const currentUserId = this.authService.getUserId();
       const currentUserName = this.authService.getUserName();
-
       if (!currentUserId) {
         console.error('❌ Cannot create booking: User not logged in');
         return;
@@ -105,20 +96,25 @@ export class BookingpageListComponent {
     }
   }
 
-  // POST bokning
   postNewBooking(booking: Booking) {
     if (!this.authService.isAdmin() && !this.authService.isUser())
       return console.error('Unauthorized');
 
     this.bookingApi.postNewBooking(booking).subscribe(
-      (response) => {
-        // Om statusen är högre än 201 så stängs bekräftelse-popup
+      (response: HttpResponse<any>) => {
         if (response.status > 201) {
           this.confirmationIsVisible = false;
           return;
         }
-        // Annars bekräftas bokningen (statuskod 200 eller 201)
         this.isBooked = true;
+
+        // be parent (pane) att ladda om resources direkt
+        this.bookingCommitted.emit();
+
+        // (valfritt) optimistisk lokalt:
+        this.resources = this.resources.map((it: any) =>
+          it.id === this.selectedResourceId ? { ...it, isAvailable: false } : it
+        );
       },
       (error: any) => {
         console.error('Status code: ', error.status);
@@ -130,14 +126,11 @@ export class BookingpageListComponent {
     );
   }
 
-  //Lokal dagsintervall
-  private getLocalDayRange(d: Date) {
-    const y = d.getFullYear();
-    const m = d.getMonth();
-    const day = d.getDate();
+  private getUtcDayRange(d: Date) {
+    const isoDate = d.toISOString().split('T')[0]; // YYYY-MM-DD baserat på d i UTC
     return {
-      start: new Date(y, m, day, 0, 0, 0, 0),
-      end: new Date(y, m, day, 23, 59, 59, 999),
+      start: new Date(`${isoDate}T00:00:00.000Z`),
+      end: new Date(`${isoDate}T23:59:59.999Z`),
     };
   }
 }

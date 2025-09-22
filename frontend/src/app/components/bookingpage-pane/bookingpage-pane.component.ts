@@ -1,15 +1,17 @@
 import {
   Component,
-  OnDestroy,
   OnInit,
   inject,
   PLATFORM_ID,
+  DestroyRef,
 } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { ResourceTypeService } from '../ResourceMenu/Services/ResourceTypeService.service';
 import { ResourceService } from '../ResourceMenu/Services/ResourceService.service';
 import { BookingHubService } from '../ResourceMenu/Services/bookingHubService.service';
+
 import { BookingpageMenuComponent } from '../bookingpage-menu/bookingpage-menu.component';
 import { BookingpageCalendarComponent } from '../bookingpage-calendar/bookingpage-calendar.component';
 import { BookingpageListComponent } from '../bookingpage-list/bookingpage-list.component';
@@ -42,8 +44,9 @@ interface ResourceListItem {
   ],
   templateUrl: './bookingpage-pane.component.html',
 })
-export class BookingpagePaneComponent implements OnInit, OnDestroy {
+export class BookingpagePaneComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
+  private destroyRef = inject(DestroyRef);
   readonly isBrowser = isPlatformBrowser(this.platformId);
 
   selectedDate: Date | null = null;
@@ -58,7 +61,7 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
   start?: Date;
   end?: Date;
 
-  private subs: Subscription[] = [];
+  private hubRefreshBusy = false;
 
   constructor(
     private typeApi: ResourceTypeService,
@@ -73,8 +76,10 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
     if (!this.authService.isAdmin() && !this.authService.isUser())
       return console.error('Unauthorized');
 
-    this.subs.push(
-      this.typeApi.getAll().subscribe({
+    this.typeApi
+      .getAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
         next: (types: ResourceTypeDto[]) => {
           this.types = types.map((t) => ({
             id: t.id,
@@ -82,21 +87,27 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
             countAll: 0,
             countAvailable: 0,
           }));
+          if (this.start && this.end) this.refreshAllTypeCounts();
         },
         error: () => (this.error = 'Kunde inte hämta resurstyp-lista.'),
-      })
-    );
+      });
 
     this.hub.start().then(() => {
-      const refresh = () => this.refreshResources();
-      this.hub.onCreated(refresh);
-      this.hub.onUpdated(refresh);
-      this.hub.onDeleted(refresh);
-    });
-  }
+      const refreshFromHub = () => {
+        if (!this.selectedTypeId || !this.start || !this.end) return;
 
-  ngOnDestroy(): void {
-    this.subs.forEach((s) => s.unsubscribe());
+        if (this.hubRefreshBusy) return;
+        this.hubRefreshBusy = true;
+        setTimeout(() => (this.hubRefreshBusy = false), 250);
+
+        this.refreshResources();
+        this.refreshAllTypeCounts();
+      };
+
+      this.hub.onCreated(refreshFromHub);
+      this.hub.onUpdated(refreshFromHub);
+      this.hub.onDeleted(refreshFromHub);
+    });
   }
 
   selectType(typeId: number) {
@@ -109,15 +120,48 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Ny handler: tar emot färdigberäknat dagsintervall från kalendern
   onDaySelected(sel: { date: Date; start: Date; end: Date } | null) {
     this.selectedDate = sel?.date ?? null;
-    this.start = sel?.start;
-    this.end = sel?.end;
+
+    if (sel?.date) {
+      // Bygg *UTC*-dygn för API:t (matchar backend)
+      const isoDate = sel.date.toISOString().split('T')[0];
+      this.start = new Date(`${isoDate}T00:00:00.000Z`);
+      this.end = new Date(`${isoDate}T23:59:59.999Z`);
+    } else {
+      this.start = undefined;
+      this.end = undefined;
+    }
 
     if (sel) {
       this.refreshResources();
       this.refreshAllTypeCounts();
+    }
+  }
+
+  onBookingCommitted() {
+    console.log(
+      '[pane] bookingCommitted – refreshing…',
+      this.selectedTypeId,
+      this.start,
+      this.end
+    );
+    if (this.selectedTypeId && this.start && this.end) {
+      this.refreshResources();
+      this.refreshAllTypeCounts();
+    }
+  }
+
+  selectResource(
+    resourceId: number | null,
+    _name: string | null,
+    isAvailable: boolean
+  ) {
+    if (isAvailable === false || !resourceId) return;
+    this.selectedResourceId = resourceId;
+
+    if (window.innerWidth < 768) {
+      document.getElementById('bookButton')?.scrollIntoView();
     }
   }
 
@@ -127,21 +171,20 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = undefined;
 
-    this.subs.push(
-      this.resourceApi
-        .getByType(this.selectedTypeId, this.start, this.end)
-        .subscribe({
-          next: (list: ResourceListItem[]) => {
-            this.resources = list;
-            this.loading = false;
-            this.updateTypeCounts();
-          },
-          error: () => {
-            this.error = 'Kunde inte hämta resurser.';
-            this.loading = false;
-          },
-        })
-    );
+    this.resourceApi
+      .getByType(this.selectedTypeId, this.start, this.end)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (list: ResourceListItem[]) => {
+          this.resources = list;
+          this.loading = false;
+          this.updateTypeCounts();
+        },
+        error: () => {
+          this.error = 'Kunde inte hämta resurser.';
+          this.loading = false;
+        },
+      });
   }
 
   private updateTypeCounts() {
@@ -153,21 +196,6 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectResource(
-    resourceId: number | null,
-    _name: string | null,
-    isAvailable: boolean
-  ) {
-    if (isAvailable === false) return;
-    if (!resourceId) return;
-
-    this.selectedResourceId = resourceId;
-
-    if (window.innerWidth < 768) {
-      document.getElementById('bookButton')?.scrollIntoView();
-    }
-  }
-
   private refreshAllTypeCounts() {
     if (!this.authService.isAdmin() && !this.authService.isUser())
       return console.error('Unauthorized');
@@ -175,23 +203,24 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
     if (!this.isBrowser || !this.start || !this.end || !this.types?.length)
       return;
 
-    const localSubs = this.types.map((t) =>
-      this.resourceApi.getByType(t.id, this.start!, this.end!).subscribe({
-        next: (list: ResourceListItem[]) => {
-          const all = list.length;
-          const avail = list.filter((r) => r.isAvailable).length;
-          this.types = this.types.map((x) =>
-            x.id === t.id ? { ...x, countAll: all, countAvailable: avail } : x
-          );
-        },
-        error: () => {
-          this.types = this.types.map((x) =>
-            x.id === t.id ? { ...x, countAll: 0, countAvailable: 0 } : x
-          );
-        },
-      })
-    );
-
-    this.subs.push(...localSubs);
+    this.types.forEach((t) => {
+      this.resourceApi
+        .getByType(t.id, this.start!, this.end!)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (list: ResourceListItem[]) => {
+            const all = list.length;
+            const avail = list.filter((r) => r.isAvailable).length;
+            this.types = this.types.map((x) =>
+              x.id === t.id ? { ...x, countAll: all, countAvailable: avail } : x
+            );
+          },
+          error: () => {
+            this.types = this.types.map((x) =>
+              x.id === t.id ? { ...x, countAll: 0, countAvailable: 0 } : x
+            );
+          },
+        });
+    });
   }
 }
