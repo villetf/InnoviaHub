@@ -50,12 +50,16 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<BookingReadDto>> Create([FromBody] BookingCreateDto dto, CancellationToken ct)
         {
-            //Normalisera till UTC för stabilitet i frontend innan riktig tid används
-            var startUtc = DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
-            var endUtc   = DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
+            // Tolka inkommande tider som UTC (frontend skickar ISO8601 med 'Z')
+var startUtc = dto.StartTime.Kind == DateTimeKind.Utc
+        ? dto.StartTime
+        : DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
+    var endUtc = dto.EndTime.Kind == DateTimeKind.Utc
+        ? dto.EndTime
+        : DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
 
             //Vallidera tid
-            if(dto.EndTime <= dto.StartTime)
+            if (endUtc <= startUtc)
                 return BadRequest(new {message = "EndTime måste vara efter StartTime"});
 
             //Vallidera resurs
@@ -73,7 +77,7 @@ namespace backend.Controllers
                 UserName = dto.UserName,
                 ResourceId = dto.ResourceId,
                 StartTime = startUtc,
-                EndTime = startUtc,
+                EndTime = endUtc,
                 Status = string.IsNullOrWhiteSpace(dto.Status) ? "Confirmed" : dto.Status
             };
 
@@ -85,9 +89,12 @@ namespace backend.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<BookingReadDto>> Update(int id, [FromBody] BookingUpdateDto dto, CancellationToken ct)
         {
-            //Normalisera till UTC för stabilitet i frontend innan riktig tid används
-            var startUtc = DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
-            var endUtc   = DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
+            var startUtc = dto.StartTime.Kind == DateTimeKind.Utc
+        ? dto.StartTime
+        : DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Utc);
+    var endUtc = dto.EndTime.Kind == DateTimeKind.Utc
+        ? dto.EndTime
+        : DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Utc);
 
             // Joel's ändringar för rätt userinfo - Säkerhetskontroll: Användare kan endast redigera sina egna bokningar
             var existingBooking = await _bookings.GetById(id, ct);
@@ -97,7 +104,7 @@ namespace backend.Controllers
                 return Forbid("Du kan endast redigera dina egna bokningar");
 
             //Vallidera tid
-            if(dto.EndTime <= dto.StartTime)
+            if (endUtc <= startUtc)
                 return BadRequest(new {message = "EndTime måste vara efter StartTime"});
 
             //Vallidera resurs
@@ -115,7 +122,7 @@ namespace backend.Controllers
                 UserName = dto.UserName,
                 ResourceId = dto.ResourceId,
                 StartTime = startUtc,
-                EndTime = startUtc,
+                EndTime = endUtc,
                 Status = string.IsNullOrWhiteSpace(dto.Status) ? "Confirmed" : dto.Status
             };
 
@@ -140,7 +147,9 @@ namespace backend.Controllers
                 !Guid.TryParse(userIdString, out var userId) ||
                 existingBooking.UserId != userId)
             {
-                return Forbid("Du kan endast radera dina egna bokningar");
+                return StatusCode(StatusCodes.Status403Forbidden,
+            new { message = "Du kan endast radera dina egna bokningar" });
+
             }
 
             var ok = await _bookings.Delete(id, ct);
