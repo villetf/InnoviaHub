@@ -15,6 +15,7 @@ import {
 } from '../ResourceMenu/models/booking.model';
 import { ButtonComponent } from '../../components/button/button.component';
 import { BookingService } from '../ResourceMenu/Services/booking.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-booking-detail',
@@ -29,6 +30,7 @@ export class BookingDetailComponent implements OnChanges {
 
   private api = inject(BookingService);
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
 
   loading = false;
   error = '';
@@ -55,6 +57,10 @@ export class BookingDetailComponent implements OnChanges {
 
   load() {
     this.error = '';
+
+    if (!this.authService.isAdmin() && !this.authService.isUser())
+      return console.error('Unauthorized');
+
     if (!this.bookingId) {
       this.booking = undefined;
       return;
@@ -89,6 +95,9 @@ export class BookingDetailComponent implements OnChanges {
   }
 
   save() {
+    if (!this.authService.isAdmin() && !this.authService.isUser())
+      return console.error('Unauthorized');
+
     if (!this.booking) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -131,6 +140,9 @@ export class BookingDetailComponent implements OnChanges {
   }
 
   remove() {
+    if (!this.authService.isAdmin() && !this.authService.isUser())
+      return console.error('Unauthorized');
+
     if (!this.booking) return;
     if (!confirm('Radera bokningen?')) return;
     this.loading = true;

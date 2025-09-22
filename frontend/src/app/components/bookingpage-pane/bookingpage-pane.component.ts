@@ -13,6 +13,7 @@ import { BookingHubService } from '../ResourceMenu/Services/bookingHubService.se
 import { BookingpageMenuComponent } from '../bookingpage-menu/bookingpage-menu.component';
 import { BookingpageCalendarComponent } from '../bookingpage-calendar/bookingpage-calendar.component';
 import { BookingpageListComponent } from '../bookingpage-list/bookingpage-list.component';
+import { AuthService } from '../../services/auth.service';
 
 interface ResourceTypeDto {
   id: number;
@@ -62,11 +63,15 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
   constructor(
     private typeApi: ResourceTypeService,
     private resourceApi: ResourceService,
-    private hub: BookingHubService
+    private hub: BookingHubService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     if (!this.isBrowser) return;
+
+    if (!this.authService.isAdmin() && !this.authService.isUser())
+      return console.error('Unauthorized');
 
     this.subs.push(
       this.typeApi.getAll().subscribe({
@@ -164,6 +169,9 @@ export class BookingpagePaneComponent implements OnInit, OnDestroy {
   }
 
   private refreshAllTypeCounts() {
+    if (!this.authService.isAdmin() && !this.authService.isUser())
+      return console.error('Unauthorized');
+
     if (!this.isBrowser || !this.start || !this.end || !this.types?.length)
       return;
 
