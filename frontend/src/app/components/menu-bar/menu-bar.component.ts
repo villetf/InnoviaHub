@@ -25,4 +25,8 @@ export class MenuBarComponent {
   onLogout(): void {
     this.authService.logout();
   }
+
+  checkIfAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 }
