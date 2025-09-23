@@ -37,6 +37,9 @@ export class ProfilePageComponent implements OnInit {
     status: ''
   };
   
+  // Joel's ändringar - Inaktivera tidigare datum på kalendern
+  minDateTime = '';
+  
   // Cache user data to avoid repeated AuthService calls
   userName = '';
   userEmail = '';
@@ -110,6 +113,10 @@ export class ProfilePageComponent implements OnInit {
     const startDate = new Date(this.selectedBooking.startTime);
     const endDate = new Date(this.selectedBooking.endTime);
     
+    // Joel's ändringar - Sätt minsta datum till nu för att förhindra tidigare datum
+    const now = new Date();
+    this.minDateTime = this.formatDateTimeLocal(now);
+    
     this.editForm = {
       startTime: this.formatDateTimeLocal(startDate),
       endTime: this.formatDateTimeLocal(endDate),
@@ -140,13 +147,28 @@ export class ProfilePageComponent implements OnInit {
       return;
     }
 
+    // Joel's ändringar - Validering av datum och tid
+    const startTime = new Date(this.editForm.startTime);
+    const endTime = new Date(this.editForm.endTime);
+    const now = new Date();
+
+    if (startTime < now) {
+      this.errorMessage = 'Starttiden kan inte vara i det förflutna';
+      return;
+    }
+
+    if (endTime <= startTime) {
+      this.errorMessage = 'Sluttiden måste vara efter starttiden';
+      return;
+    }
+
     try {
       const updateDto = {
         userId: userId,
         userName: userName,
         resourceId: this.selectedBooking.resourceId,
-        startTime: new Date(this.editForm.startTime).toISOString(),
-        endTime: new Date(this.editForm.endTime).toISOString(),
+        startTime: startTime.toISOString(),
+        endTime: endTime.toISOString(),
         status: this.editForm.status
       };
 
@@ -195,6 +217,20 @@ export class ProfilePageComponent implements OnInit {
     } catch (error) {
       console.error('❌ Fel vid radering av bokning:', error);
       this.errorMessage = 'Kunde inte radera bokningen';
+    }
+  }
+
+  // Joel's ändringar - Hantera starttidsändring för att uppdatera sluttid minimum
+  onStartTimeChange() {
+    if (this.editForm.startTime && this.editForm.endTime) {
+      const startTime = new Date(this.editForm.startTime);
+      const endTime = new Date(this.editForm.endTime);
+      
+      // Om sluttiden är före eller samma som starttiden, sätt sluttiden till en timme efter starttiden
+      if (endTime <= startTime) {
+        const newEndTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Lägg till 1 timme
+        this.editForm.endTime = this.formatDateTimeLocal(newEndTime);
+      }
     }
   }
 

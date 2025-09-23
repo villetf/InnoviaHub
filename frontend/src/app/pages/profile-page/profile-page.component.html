@@ -91,6 +91,8 @@
                 type="datetime-local" 
                 id="startTime"
                 [(ngModel)]="editForm.startTime"
+                [min]="minDateTime"
+                (change)="onStartTimeChange()"
                 class="form-control"
               />
             </div>
@@ -101,6 +103,7 @@
                 type="datetime-local" 
                 id="endTime"
                 [(ngModel)]="editForm.endTime"
+                [min]="editForm.startTime || minDateTime"
                 class="form-control"
               />
             </div>
