@@ -6,6 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 99999;
 }
 
 .menu-bar-list {
@@ -59,13 +60,13 @@
 }
 
 .menu-bar-list__icon {
-  padding: 6px 20px;
+  padding: 6px 18px;
   border-radius: 30px;
 }
 
 .menu-bar-list__icon svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 .menu-bar-list__icon svg path {
@@ -74,6 +75,27 @@
 
 .menu-bar-list__label {
   color: var(--color-icon);
+  font-size: 12px;
+}
+
+@media (min-width: 768px) {
+  .menu-bar-list {
+    gap: 1rem;
+    max-width: 550px;
+  }
+
+  .menu-bar-list__icon {
+    padding: 6px 24px;
+  }
+
+  .menu-bar-list__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .menu-bar-list__label {
+    font-size: 16px;
+  }
 }
 
 @media (min-width: 1024px) {

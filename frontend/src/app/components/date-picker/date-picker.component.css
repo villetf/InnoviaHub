@@ -61,6 +61,7 @@
   height: 2.5rem;
   line-height: 2.5rem;
   border-radius: 9999px;
+  z-index: 0;
 }
 @media (min-width: 768px) {
   :host ::ng-deep .mat-calendar-body-cell-content {
