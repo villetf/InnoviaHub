@@ -7,15 +7,17 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
 import { AzureDebugComponent } from './components/azure-debug/azure-debug.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { AuthGuard } from './core/authGuard';
+import { RoleGuard } from './core/roleGuard';
 
 export const routes: Routes = [
-  { path: 'admin', component: AdminPageComponent },
+  { path: 'admin', component: AdminPageComponent, canActivate: [RoleGuard], data: { roles: ['Admin'] } },
   { path: 'logga-in', component: LoginPageComponent },
   { path: 'registrera', component: RegistrationPageComponent },
-  { path: 'profil', component: ProfilePageComponent },
-  { path: 'boka', component: BookingPageComponent },
-  { path: 'sensorer', component: SensorPageComponent },
-  { path: 'azure-debug', component: AzureDebugComponent },
+  { path: 'profil', component: ProfilePageComponent, canActivate: [AuthGuard] },
+  { path: 'boka', component: BookingPageComponent, canActivate: [AuthGuard] },
+  { path: 'sensorer', component: SensorPageComponent, canActivate: [AuthGuard] },
+  { path: 'azure-debug', component: AzureDebugComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'logga-in', pathMatch: 'full' },
   { path: '**', component: NotFoundPageComponent },
 ];

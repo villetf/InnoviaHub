@@ -19,6 +19,7 @@ import { ResourceItem } from '../ResourceMenu/models/Resource';
 import { ResourcesListComponent } from '../resources-list/resources-list.component';
 import { ResourcesDetailsComponent } from '../resources-details/resources-details.component';
 import { ButtonComponent } from '../button/button.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-resources-pane',
@@ -28,14 +29,15 @@ import { ButtonComponent } from '../button/button.component';
     FormsModule,
     ReactiveFormsModule,
     ResourcesListComponent,
-    ResourcesDetailsComponent
-],
+    ResourcesDetailsComponent,
+  ],
   templateUrl: './resources-pane.component.html',
 })
 export class ResourcesPaneComponent implements OnInit {
   private fb = inject(FormBuilder);
   private resourceApi = inject(ResourceService);
   private typeApi = inject(ResourceTypeService);
+  private authService = inject(AuthService);
 
   types: ResourceType[] = [];
   resources: ResourceItem[] = [];
@@ -67,6 +69,8 @@ export class ResourcesPaneComponent implements OnInit {
   }
 
   loadTypes() {
+    if (!this.authService.isAdmin()) return console.error('Unauthorized');
+
     this.loading = true;
     this.typeApi.getAll().subscribe({
       next: (res) => {
@@ -89,6 +93,8 @@ export class ResourcesPaneComponent implements OnInit {
   }
 
   fetchResources() {
+    if (!this.authService.isAdmin()) return console.error('Unauthorized');
+
     const t = this.selectedTypeId();
     if (!t) return;
     this.loading = true;
@@ -117,6 +123,8 @@ export class ResourcesPaneComponent implements OnInit {
   }
 
   handleDelete(item: ResourceItem) {
+    if (!this.authService.isAdmin()) return console.error('Unauthorized');
+
     if (!confirm(`Ta bort "${item.name}"?`)) return;
     this.resourceApi.delete(item.id).subscribe({
       next: () => {
@@ -138,6 +146,9 @@ export class ResourcesPaneComponent implements OnInit {
   handleSubmit() {
     this.error = '';
     this.success = '';
+
+    if (!this.authService.isAdmin()) return console.error('Unauthorized');
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

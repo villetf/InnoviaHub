@@ -4,6 +4,7 @@ import { BookingService } from '../ResourceMenu/Services/booking.service';
 import { BookingRead } from '../ResourceMenu/models/booking.model';
 import { BookingListComponent } from '../booking-list/booking-list.component';
 import { BookingDetailComponent } from '../booking-detail/booking-detail.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-booking-pane',
@@ -19,15 +20,18 @@ export class BookingPaneComponent implements OnInit {
   search = signal('');
   selectedId = signal<number | null>(null);
 
-  constructor(private api: BookingService) {}
+  constructor(private api: BookingService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.load();
   }
 
   load() {
+    if (!this.authService.isAdmin()) return console.error('Unauthorized');
+
     this.loading = true;
     this.error = '';
+
     this.api.getAll().subscribe({
       next: (list) => {
         this.all = list ?? [];
