@@ -27,6 +27,14 @@ InnoviaHub är en webbapplikation där användare kan:
 
 ## Kom igång
 
+### Snabbstart
+
+Om du inte vill installera applikationen själv finns produktionsmiljön tillgänglig på https://innoviahub-app-6hrgl.ondigitalocean.app/.
+
+### Entra ID
+
+För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöver du bli tillagd i Innovia Hubs Entra ID-katalog. Kontakta någon i teamet för att bli tillagd.
+
 ### Vad du behöver installerat
 
 - Node.js (version 18 eller senare)
