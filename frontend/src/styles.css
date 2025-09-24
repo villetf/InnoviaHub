@@ -116,6 +116,7 @@ body {
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
+  scrollbar-color: var(--color-border) var(--color-bg-alt);
 }
 
 img {

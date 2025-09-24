@@ -86,23 +86,21 @@
             <h4>Redigera bokning</h4>
             
             <div class="form-group">
-              <label for="startTime">Starttid:</label>
+              <label for="bookingDate">Datum:</label>
               <input 
-                type="datetime-local" 
-                id="startTime"
-                [(ngModel)]="editForm.startTime"
+                type="date" 
+                id="bookingDate"
+                [(ngModel)]="editForm.bookingDate"
+                [min]="minDate"
                 class="form-control"
               />
             </div>
             
             <div class="form-group">
-              <label for="endTime">Sluttid:</label>
-              <input 
-                type="datetime-local" 
-                id="endTime"
-                [(ngModel)]="editForm.endTime"
-                class="form-control"
-              />
+              <label>Tid (bevaras):</label>
+              <div class="preserved-time">
+                {{ editForm.originalStartTime | date:'shortTime' }} - {{ editForm.originalEndTime | date:'shortTime' }}
+              </div>
             </div>
             
             <div class="form-group">

@@ -2,11 +2,16 @@
   border-radius: 1rem;
   background-color: #ffe0dc;
   padding: 0.25rem;
+  max-width: 345px;
 }
 
 /* Hela kalenderns bredd */
 :host ::ng-deep .mat-calendar {
   width: 100%;
+}
+
+:host ::ng-deep .mat-calendar-content {
+  padding: 0;
 }
 
 /*Stabil tabellayout (7 lika kolumner) */
@@ -61,7 +66,9 @@
   height: 2.5rem;
   line-height: 2.5rem;
   border-radius: 9999px;
+  z-index: 0;
 }
+
 @media (min-width: 768px) {
   :host ::ng-deep .mat-calendar-body-cell-content {
     line-height: 2.5rem;
@@ -127,4 +134,14 @@
 }
 :host ::ng-deep app-calendar-header .cal-nav-btn:hover {
   background: rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 1024px) {
+  :host ::ng-deep .mat-calendar-content {
+    padding: 0 8px 8px 8px;
+  }
+
+  :host ::ng-deep .mat-calendar-body-cell-content .mat-focus-indicator {
+    align-self: center;
+  }
 }

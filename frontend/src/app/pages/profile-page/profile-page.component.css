@@ -255,6 +255,17 @@
   margin-right: 0;
 }
 
+/* Joel's ändringar - Style för bevarad tid visning */
+.preserved-time {
+  padding: 0.5rem;
+  background: var(--color-bg-alt, #f8f9fa);
+  border: 1px solid var(--color-border, #dee2e6);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary, #6c757d);
+  font-weight: 500;
+}
+
 /* Responsiv design */
 @media (max-width: 768px) {
   .bookings-section {

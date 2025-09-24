@@ -51,6 +51,8 @@ export class BookingDetailComponent implements OnChanges {
       : 'Bokning'
   );
 
+  currentDate: string = new Date().toISOString().split('T')[0];
+
   ngOnChanges(changes: SimpleChanges): void {
     if ('bookingId' in changes) this.load();
   }

@@ -33,7 +33,7 @@
   >
     <li
       *ngFor="let r of resources"
-      class="flex items-center justify-between px-4 py-3"
+      class="flex items-center justify-between px-4 py-3 gap-y-3 gap-x-2 flex-wrap"
     >
       <div>
         <div class="font-medium text-heading">{{ r.name }}</div>
@@ -47,6 +47,7 @@
           label="Redigera"
           [buttonStyle]="'outlined'"
           [borderRadius]="'br-full'"
+          [size]="'small'"
           [bgColor]="'var(--color-border)'"
           [textColor]="'var(--color-text)'"
           (onClick)="edit.emit(r)"
@@ -57,6 +58,7 @@
           label="Ta bort"
           [buttonStyle]="'filled'"
           [borderRadius]="'br-full'"
+          [size]="'small'"
           [bgColor]="'var(--color-primary)'"
           [textColor]="'#fff'"
           (onClick)="remove.emit(r)"
