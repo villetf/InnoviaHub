@@ -199,7 +199,7 @@ export class DatePickerComponent
   }
 
   // CSS-klasser per datum (ex: helger)
-  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate: Date, view: string) => {
     if (view !== 'month') return '';
     const classes: string[] = [];
     const day = cellDate.getDay();
