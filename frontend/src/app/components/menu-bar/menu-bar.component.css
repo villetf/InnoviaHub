@@ -7,6 +7,7 @@
   justify-content: center;
   align-items: center;
   z-index: 99999;
+  overflow: hidden;
 }
 
 .menu-bar-list {
@@ -16,6 +17,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 32px;
+  gap: 2rem;
+  overflow: scroll;
 }
 
 .menu-bar-list__item {
@@ -65,8 +68,8 @@
 }
 
 .menu-bar-list__icon svg {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }
 
 .menu-bar-list__icon svg path {
@@ -75,7 +78,7 @@
 
 .menu-bar-list__label {
   color: var(--color-icon);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -86,11 +89,6 @@
 
   .menu-bar-list__icon {
     padding: 6px 24px;
-  }
-
-  .menu-bar-list__icon svg {
-    width: 24px;
-    height: 24px;
   }
 
   .menu-bar-list__label {
