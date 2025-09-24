@@ -9,6 +9,10 @@
   width: 100%;
 }
 
+:host ::ng-deep .mat-calendar-content {
+  padding: 0;
+}
+
 /*Stabil tabellayout (7 lika kolumner) */
 :host ::ng-deep .mat-calendar-table {
   table-layout: fixed;
@@ -128,4 +132,14 @@
 }
 :host ::ng-deep app-calendar-header .cal-nav-btn:hover {
   background: rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 1024px) {
+  :host ::ng-deep .mat-calendar-content {
+    padding: 0 8px 8px 8px;
+  }
+
+  :host ::ng-deep .mat-calendar-body-cell-content .mat-focus-indicator {
+    align-self: center;
+  }
 }
