@@ -116,6 +116,7 @@ export class BookingpagePaneComponent implements OnInit {
     this.refreshResources();
 
     if (window.innerWidth < 768) {
+      if (!this.selectedTypeId) return;
       document.getElementById('calendar')?.scrollIntoView();
     }
   }
@@ -159,10 +160,6 @@ export class BookingpagePaneComponent implements OnInit {
   ) {
     if (isAvailable === false || !resourceId) return;
     this.selectedResourceId = resourceId;
-
-    if (window.innerWidth < 768) {
-      document.getElementById('bookButton')?.scrollIntoView();
-    }
   }
 
   refreshResources() {

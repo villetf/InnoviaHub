@@ -12,7 +12,7 @@
   font-family: "Inter", sans-serif;
   font-size: 80px;
   font-weight: 700;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -91,16 +91,16 @@
 }
 
 .microsoft-login h2 {
-  margin: 0 0 24px 0;
-  font-size: 32px;
+  margin: 0 0 16px 0;
+  font-size: 24px;
   font-weight: 600;
   color: var(--color-text);
 }
 
 .microsoft-login p {
-  margin: 0 0 40px 0;
+  margin: 0 0 20px 0;
   color: var(--color-text-secondary);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 /* Login Divider */
@@ -113,14 +113,14 @@
 }
 
 .login-divider::before {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: var(--color-form-border);
 }
 
 .login-divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: var(--color-form-border);
@@ -142,7 +142,7 @@
   cursor: pointer;
   text-decoration: underline;
   padding: 8px;
-  margin-top: 16px;
+  margin-top: 8px;
   transition: color 0.2s ease;
 }
 
@@ -162,4 +162,24 @@
   font-weight: 600;
   color: var(--color-text);
   text-align: center;
+}
+
+@media (min-width: 768px) {
+  .login-page__logo {
+    margin-bottom: 40px;
+  }
+
+  .microsoft-login h2 {
+    margin: 0 0 24px 0;
+    font-size: 32px;
+  }
+
+  .microsoft-login p {
+    margin: 0 0 40px 0;
+    font-size: 18px;
+  }
+
+  .toggle-login-method {
+    margin-top: 16px;
+  }
 }

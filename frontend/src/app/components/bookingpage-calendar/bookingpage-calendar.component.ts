@@ -27,10 +27,5 @@ export class BookingpageCalendarComponent {
     const end = new Date(y, m, d, 23, 59, 59, 999);
 
     this.daySelected.emit({ date: e, start, end });
-
-    // Mobil: scrolla till listan
-    if (window.innerWidth < 768) {
-      document.getElementById('resourceList')?.scrollIntoView();
-    }
   }
 }

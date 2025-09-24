@@ -14,7 +14,10 @@ export class MenuBarComponent {
   currentRoute = signal<string>('');
 
   constructor(private router: Router, public authService: AuthService) {
-    // Hämta och spara nuvarande route
+    // Hämta och spara nuvarande route när sidan laddas om
+    this.currentRoute.set(window.location.pathname);
+
+    // Hämta och spara nuvarande route när routen byts med routerLink
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
