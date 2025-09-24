@@ -3,7 +3,7 @@
   <h1 class="mb-4 text-2xl font-bold text-heading">Bokning</h1>
 
   <!-- MENY-KORT -->
-  <div class="rounded-2xl p-3 mb-6">
+  <div id="resourceType" class="rounded-2xl p-3 mb-6">
     <app-bookingpage-menu
       [types]="types"
       [selectedTypeId]="selectedTypeId"
@@ -12,7 +12,7 @@
   </div>
 
   <!-- INNEHÅLL -->
-  <div class="grid grid-cols-12 gap-6">
+  <div id="calendar" class="grid grid-cols-12 gap-6">
     <!-- Vänster: Kalender -->
     <app-bookingpage-calendar
       class="col-span-12 md:col-span-5 lg:col-span-5"
