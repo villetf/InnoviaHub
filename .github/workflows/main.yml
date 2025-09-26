@@ -20,7 +20,7 @@ jobs:
 
       - name: Move project to target directory
         run: |
-          TARGET_DIR="/var/www/innoviahub-ville/backend"
+          TARGET_DIR="/var/www/innoviahub/backend-ville"
           cp -r ./publish/ "$TARGET_DIR"
 
       - name: Restart innoviahub-ville.service
