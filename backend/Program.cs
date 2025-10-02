@@ -5,8 +5,11 @@ using backend.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+DotNetEnv.Env.Load();
 
 // Joel's ändringar för rätt userinfo - Azure AD Authentication för att få riktiga användar-ID och namn
 // Add Azure AD Authentication
@@ -57,6 +60,16 @@ builder.Services.AddCors(opt => {
 });
 
 builder.Services.AddSignalR();
+
+builder.Services.AddHttpClient("openai", client =>
+{
+   client.BaseAddress = new Uri("https://api.openai.com/v1/");
+   var apiKey = Environment.GetEnvironmentVariable("OPENAI_KEY");
+   Console.WriteLine("nyckel: ", apiKey);
+
+   client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+   client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+});
 
 // Joel's ändringar för rätt userinfo - Dependency Injection för repositories
 //DI för repositories
