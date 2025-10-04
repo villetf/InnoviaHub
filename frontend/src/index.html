@@ -19,9 +19,10 @@
       http-equiv="Content-Security-Policy"
       content="
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://kit.fontawesome.com;
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       connect-src 'self' 
+        https://ka-f.fontawesome.com
         https://login.microsoftonline.com 
         https://graph.microsoft.com 
         https://*.microsoftonline.com
@@ -34,7 +35,7 @@
         ws://localhost:*
         wss://localhost:*;
       img-src 'self' data: https:;
-      font-src 'self' data: https://fonts.gstatic.com https://fonts.googleapis.com;
+      font-src 'self' data: https://fonts.gstatic.com https://fonts.googleapis.com https://ka-f.fontawesome.com;
       frame-src https://login.microsoftonline.com https://*.microsoftonline.com;
       object-src 'none';
     "
@@ -50,6 +51,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..700,0..1,-50..200"
     />
+    <script src="https://kit.fontawesome.com/9e560ee8e6.js" crossorigin="anonymous"></script>
 
     <!--Laddar in runtime-env-->
     <script src="assets/env.js"></script>
