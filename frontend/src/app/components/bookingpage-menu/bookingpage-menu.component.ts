@@ -6,6 +6,7 @@ import {
   NavTabsComponent,
 } from '../nav-tabs/nav-tabs.component';
 import { AiViewComponent } from "../ai-view/ai-view.component";
+import { ResourceListItem } from '../../../types/ResourceListItem';
 
 @Component({
   selector: 'app-bookingpage-menu',
@@ -16,6 +17,7 @@ import { AiViewComponent } from "../ai-view/ai-view.component";
 export class BookingpageMenuComponent {
   @Input() types: any[] = [];
   @Input() selectedTypeId?: number;
+  @Input() resources: ResourceListItem[] = [];
 
   @Output() selectType = new EventEmitter<number>();
 

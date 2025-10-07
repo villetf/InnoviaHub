@@ -16,6 +16,7 @@ import { BookingpageMenuComponent } from '../bookingpage-menu/bookingpage-menu.c
 import { BookingpageCalendarComponent } from '../bookingpage-calendar/bookingpage-calendar.component';
 import { BookingpageListComponent } from '../bookingpage-list/bookingpage-list.component';
 import { AuthService } from '../../services/auth.service';
+import { ResourceListItem } from '../../../types/ResourceListItem';
 
 interface ResourceTypeDto {
   id: number;
@@ -27,11 +28,7 @@ interface ResourceTypeMenuItem {
   countAll: number;
   countAvailable: number;
 }
-interface ResourceListItem {
-  id: number;
-  name: string;
-  isAvailable: boolean;
-}
+
 
 @Component({
   selector: 'app-bookingpage-pane',
