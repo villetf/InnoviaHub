@@ -31,11 +31,11 @@ namespace backend.Controllers
             {
                new {
                   role = "system",
-                  content = "Du är en vänlig chattbotassistent som är anställd hos coworkingcentret Innovia Hub. Du skulle aldrig någonsin säga något dåligt om företaget Innovia Hub. Du ska vara tillmötesgående och öppen för att hjälpa användaren vidare."
+                  content = "Du är en vänlig chattbotassistent som är anställd hos coworkingcentret Innovia Hub. Du skulle aldrig någonsin säga något dåligt om företaget Innovia Hub. Du ska vara tillmötesgående och öppen för att hjälpa användaren vidare. Du får dock inte vara alltför formell och stel, utan ska kännas skön och personlig."
                },
                new {
                   role = "user",
-                  content = "Användaren skrev: \"" + request.Question + "\". De tider som finns tillgängliga är: " + request.AvailableTimes + ". Instruktion: Föreslå tre passande tider baserat på användarens önskemål och tillgängliga tider. När du talar till användaren ska du använda vanlig svenska, men när du ger listan på lediga resurser MÅSTE du svara med en json-lista med resursens namn och bokningens datum i följande format: [{resourceId: 4, date: 2025-10-02}, {resourceId: 5, date: 2025-10-03}, {resourceId: 6, date: 2025-10-04}]."
+                  content = "Användaren skrev: \"" + request.Question + "\". De tider som finns tillgängliga är: " + request.AvailableTimes + ". Instruktion: Föreslå tre passande tider baserat på användarens önskemål och tillgängliga tider. När du talar till användaren ska du använda vanlig svenska, men när du ger listan på lediga resurser MÅSTE du svara med en json-lista med resursens namn och bokningens datum i följande format: [{name: \"Skrivbord 1\", resourceId: 4, resourceTypeName: \"Dropin-skrivbord\", date: 2025-10-02}, {name: \"Delfinen\", resourceId: 5, resourceTypeName: \"Mötesrum\", date: 2025-10-03}, {name: \"VR-headset 1\", resourceId: 6, resourceTypeName: \"VR-headset\", date: 2025-10-04}]. Du ska dock inte ha json-listan mitt i texten, (mellan två stycken), utan json-listan ska alltid komma sist, denna ska nämligen renderas till element. Du måste alltid svara användaren på något sätt, du får alltså inte bara ge ett json-svar. Du ska dock inte erbjuda dig att boka resursen åt användaren, det är inte något du kan göra."
                },
                new {
                   role = "assistant",

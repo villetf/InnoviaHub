@@ -34,7 +34,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Kontrollera om användaren redan är inloggad
     if (this.authService.isLoggedIn()) {
-      console.log('🔄 User already logged in, redirecting to profile');
       this.router.navigate(['/profil']);
     }
   }
@@ -49,7 +48,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     if (this.isLoading) return;
     
     this.isLoading = true;
-    console.log('🔐 Starting Microsoft login...');
     
     try {
       await this.authService.login();
@@ -57,10 +55,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       // Vänta lite för att säkerställa att autentiseringen är klar
       setTimeout(() => {
         if (this.authService.isLoggedIn()) {
-          console.log('✅ Microsoft login successful, redirecting to profile');
           this.router.navigate(['/profil']);
         } else {
-          console.log('❌ Microsoft login failed or was cancelled');
           this.isLoading = false;
         }
       }, 1000);
@@ -73,7 +69,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   // Traditionell e-post/lösenord login (för framtida användning)
   handleLogin() {
-    console.log('📧 Traditional login attempted:', this.loginForm.value);
 
     // TODO: Implementera traditionell inloggning med backend
     // För nu, visa att denna funktion inte är implementerad än

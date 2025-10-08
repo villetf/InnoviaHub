@@ -1,7 +1,7 @@
 <section class="rounded-2xl bg-bg-alt p-3 h-full">
   <!-- Loading -->
   <div
-    *ngIf="loading"
+    *ngIf="handleBookingService.loading()"
     class="text-sm text-heading/70 p-2 flex items-center gap-2"
   >
     <span class="material-symbols-rounded text-[#993f3b] opacity-70 spin-slow">
@@ -11,27 +11,27 @@
   </div>
 
   <!-- Error -->
-  <div *ngIf="error" class="text-sm text-error p-2">{{ error }}</div>
+  <div *ngIf="handleBookingService.error()" class="text-sm text-error p-2">{{ handleBookingService.error() }}</div>
 
   <!-- Grid med kort -->
   <div
     id="resourceList"
-    *ngIf="!loading && !error"
+    *ngIf="!handleBookingService.loading() && !handleBookingService.error()"
     class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(200px,1fr))]"
   >
-    @for (r of resources; track r.id) {
+    @for (r of handleBookingService.resources(); track r.id) {
     <div
       (click)="
-        selectResource.emit({
-          id: r.id,
-          name: r.name,
-          isAvailable: r.isAvailable
+        handleBookingService.selectResource({
+         id: r.id,
+         name: r.name,
+         isAvailable: r.isAvailable
         })
       "
       class="rounded-2xl p-4 border cursor-pointer transition shadow-sm flex flex-col justify-between"
       [ngClass]="{
-        'bg-highlight text-white': r.id === selectedResourceId,
-        'bg-white border-border hover:bg-bg': r.id !== selectedResourceId,
+        'bg-highlight text-white': r.id === handleBookingService.selectedResourceId(),
+        'bg-white border-border hover:bg-bg': r.id !== handleBookingService.selectedResourceId(),
         'opacity-50 pointer-events-none': !r.isAvailable
       }"
     >
@@ -39,8 +39,8 @@
         <div
           class="font-semibold text-heading pr-4"
           [ngClass]="{
-            'text-white': r.id === selectedResourceId,
-            'text-heading/70': !r.isAvailable && r.id !== selectedResourceId
+            'text-white': r.id === handleBookingService.selectedResourceId(),
+            'text-heading/70': !r.isAvailable && r.id !== handleBookingService.selectedResourceId()
           }"
         >
           {{ r.name }}
@@ -49,10 +49,10 @@
           class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-primary"
           [ngClass]="
             r.isAvailable
-              ? r.id === selectedResourceId
+              ? r.id === handleBookingService.selectedResourceId()
                 ? 'bg-white/20 text-white ring-white/50'
                 : 'bg-success/20 text-heading ring-success/60'
-              : r.id === selectedResourceId
+              : r.id === handleBookingService.selectedResourceId()
               ? 'bg-white/20 text-white ring-white/50'
               : 'bg-error/10 text-error ring-error/50'
           "
@@ -63,20 +63,20 @@
     </div>
     }
 
-    <div *ngIf="!resources?.length" class="px-4 py-3 text-sm text-heading/70">
+    <div *ngIf="!handleBookingService.resources()?.length" class="px-4 py-3 text-sm text-heading/70">
       Inga resurser.
     </div>
   </div>
   <!-- Felmeddelande från bokningsförsök -->
-  @if (errorMessage) {
-  <div class="text-error mt-2">{{ errorMessage }}</div>
+  @if (handleBookingService.errorMessage) {
+  <div class="text-error mt-2">{{ handleBookingService.errorMessage }}</div>
   }
 
   <!-- Boka-knapp längst ner -->
   <div class="mt-4">
     <button
       type="button"
-      (click)="handleClickBook()"
+      (click)="handleBookingService.handleClickBook()"
       class="w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-[var(--color-primary)] text-white shadow-sm"
       aria-label="Boka vald resurs"
     >
@@ -86,14 +86,14 @@
   </div>
 
   <!-- Popup-overlay -->
-  @if (confirmationIsVisible) {
+  @if (handleBookingService.confirmationIsVisible) {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="relative">
       <app-booking-confirmation-popup
-        (buttonClicked)="receiveButtonClickedFromConfirmation($event)"
-        [selectedDate]="selectedDate"
-        [selectedResourceName]="selectedResourceName"
-        [bookingIsConfirmed]="isBooked"
+        (buttonClicked)="handleBookingService.receiveButtonClickedFromConfirmation($event)"
+        [selectedDate]="handleBookingService.selectedDate()"
+        [selectedResourceName]="handleBookingService.selectedResourceName"
+        [bookingIsConfirmed]="handleBookingService.isBooked"
       ></app-booking-confirmation-popup>
     </div>
   </div>

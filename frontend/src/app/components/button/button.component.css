@@ -62,6 +62,10 @@
   color: #1a0f0d;
 }
 
+.x-small {
+   padding: 2px 10px;
+}
+
 .small {
   font-size: 14px;
   padding: 8px 14px;
