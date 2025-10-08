@@ -138,12 +138,6 @@ export class BookingpagePaneComponent implements OnInit {
   }
 
   onBookingCommitted() {
-    console.log(
-      '[pane] bookingCommitted – refreshing…',
-      this.selectedTypeId,
-      this.start,
-      this.end
-    );
     if (this.selectedTypeId && this.start && this.end) {
       this.refreshResources();
       this.refreshAllTypeCounts();

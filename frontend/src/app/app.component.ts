@@ -38,6 +38,5 @@ export class AppComponent {
 
   onDateSelected(date: Date | null): void {
     this.selectedDate = date;
-    console.log('Date selected:', date);
   }
 }

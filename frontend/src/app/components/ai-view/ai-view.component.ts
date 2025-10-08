@@ -10,11 +10,12 @@ import { BookableResourceSlot } from '../../../types/BookableResourceSlot';
 import { ChatService } from './ChatService.service';
 import { NgClass } from '@angular/common';
 import { BookingObject } from '../../../types/BookingObject';
+import { ChatBookingButtonComponent } from "../chat-booking-button/chat-booking-button.component";
 
 
 @Component({
    selector: 'app-ai-view',
-   imports: [FormsModule, NgClass],
+   imports: [FormsModule, NgClass, ChatBookingButtonComponent],
    templateUrl: './ai-view.component.html',
    styleUrl: './ai-view.component.css'
 })
@@ -59,11 +60,7 @@ export class AiViewComponent {
       });
    }
 
-   async sendChat() {
-      console.log('answer pending', this.answerIsPending());
-      console.log('meddelande', this.messageToBeSent());
-      console.log('längd', this.messageToBeSent().length);
-      
+   async sendChat() {      
       const messageThatIsSent = this.messageToBeSent();
       this.answerIsPending.set(true);
       this.fetchAvailableTimes()
@@ -73,6 +70,7 @@ export class AiViewComponent {
                chatHistory: JSON.stringify(this.chatConversation()),
                availableTimes: JSON.stringify(times)
             }
+            console.log('skickar meddelande', chatData.availableTimes);
             this.chatService.sendChat(chatData)
                .subscribe(response => {
                   this.answerIsPending.set(false);
@@ -80,9 +78,8 @@ export class AiViewComponent {
                   if (this.checkJson(response)) {
                      this.chatConversation.update(conv => [
                         ...conv,
-                        { author: 'bot', text: response, bookingObjects: this.parseMessageJson(response)}
+                        { author: 'bot', text: response.replace(/\[.*\]/s, ''), bookingObjects: this.parseMessageJson(response)}
                      ])
-                     console.log('josn parsat', this.chatConversation());
                   } else {
                      this.chatConversation.update(conv => [
                         ...conv,

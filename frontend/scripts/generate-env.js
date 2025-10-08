@@ -26,9 +26,3 @@ const content = `window.__env = {
 
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, content, "utf8");
-console.log("[env] Wrote", outFile, "with:", {
-  apiUrl,
-  hubUrl,
-  loginRedirectUrl,
-  logoutRedirectUrl,
-});

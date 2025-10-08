@@ -27,7 +27,6 @@ export class BookingHubService {
       .build();
 
     await this.hub.start();
-    console.log('SignalR connected', this.cfg.hubUrl);
   }
 
   onCreated(cb: (b: any) => void) {

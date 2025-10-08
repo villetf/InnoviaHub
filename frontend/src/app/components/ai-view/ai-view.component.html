@@ -22,6 +22,11 @@
                <div class="w-full flex mb-3" [class.justify-end]="message.author === 'user'">
                   <div class="bg-[#FFE1DD] rounded-2xl mx-3 max-w-[66%] p-2 text-sm">
                      {{ message.text }}
+                     @if (message.bookingObjects) {
+                        @for (bookingObject of message.bookingObjects; track $index) {
+                           <app-chat-booking-button [bookingObject]="bookingObject" />
+                        }
+                     }
                   </div>
                </div>
             }

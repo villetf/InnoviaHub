@@ -33,7 +33,7 @@ builder.Services.AddOpenApi();
 
 
 // För att använda inMemory-databas, sätt useInMemory till true
-var useInMemory = false;
+var useInMemory = true;
 
 if (useInMemory)
 {

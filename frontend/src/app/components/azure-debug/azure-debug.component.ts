@@ -132,7 +132,6 @@ export class AzureDebugComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    console.log('🔧 Azure Debug Component initialized');
     this.updateCurrentTime();
     this.checkMsalService();
     this.checkAuthentication();
@@ -147,7 +146,6 @@ export class AzureDebugComponent implements OnInit {
   private checkMsalService(): void {
     try {
       this.msalServiceStatus = this.authService.getMsalServiceStatus();
-      console.log('📊 MSAL Service Status:', this.msalServiceStatus);
     } catch (error) {
       this.msalServiceStatus = '❌ Error checking MSAL';
       console.error('❌ Error checking MSAL service:', error);
@@ -160,14 +158,12 @@ export class AzureDebugComponent implements OnInit {
       if (this.isAuthenticated) {
         this.userName = this.authService.getUserName();
       }
-      console.log('🔐 Authentication Status:', this.isAuthenticated);
     } catch (error) {
       console.error('❌ Error checking authentication:', error);
     }
   }
 
   testLogin(): void {
-    console.log('🔑 Debug Login clicked');
     try {
       this.authService.login();
     } catch (error) {
@@ -177,7 +173,6 @@ export class AzureDebugComponent implements OnInit {
   }
 
   testLogout(): void {
-    console.log('🚪 Debug Logout clicked');
     try {
       this.authService.logout();
       setTimeout(() => this.checkAuthentication(), 1000);

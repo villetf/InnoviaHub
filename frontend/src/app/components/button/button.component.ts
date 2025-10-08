@@ -18,7 +18,7 @@ export class ButtonComponent implements OnInit {
   bgColor = input<string>('var(--color-primary)');
   @Input() textColor: string =
     this.buttonStyle() === 'outlined' ? 'var(--color-primary)' : '#fff';
-  size = input<'small' | 'medium' | 'large'>('medium');
+  size = input<'x-small' | 'small' | 'medium' | 'large'>('medium');
   disabled = input<boolean>(false);
 
   ngOnInit(): void {

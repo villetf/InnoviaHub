@@ -37,7 +37,6 @@ export class AuthService {
         takeUntil(this._destroying$)
       )
       .subscribe((result: any) => {
-        console.log('Login successful:', result);
       });
   }
 
@@ -46,7 +45,6 @@ export class AuthService {
       if (!this._initialized) {
         await this.msalService.instance.initialize();
         this._initialized = true;
-        console.log('✅ MSAL initialized successfully');
       }
     } catch (error) {
       console.error('❌ MSAL initialization failed:', error);
@@ -54,7 +52,6 @@ export class AuthService {
   }
 
   async login(): Promise<void> {
-    console.log('🔐 Login method called');
 
     if (!this.msalService) {
       console.error('❌ MSAL Service is not available');
@@ -65,18 +62,13 @@ export class AuthService {
       // Ensure initialization before login
       await this.initializeMsal();
 
-      console.log('🚀 Attempting login popup...');
-      console.log('📋 Login request config:', loginRequest);
-      console.log('🌐 Environment config:', window.__env);
 
       const result = await firstValueFrom(
         this.msalService.loginPopup(loginRequest)
       );
 
-      console.log('✅ Login successful', result);
       if (result?.account) {
         this.msalService.instance.setActiveAccount(result.account);
-        console.log('✅ Active account set:', result.account);
       }
     } catch (error) {
       console.error('❌ Login failed', error);
@@ -85,7 +77,6 @@ export class AuthService {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
-        console.log('🔄 Popup blocked, trying redirect...');
         try {
           await firstValueFrom(this.msalService.loginRedirect(loginRequest));
         } catch (redirectError) {
