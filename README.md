@@ -37,6 +37,12 @@ Om du inte vill installera applikationen själv finns produktionsmiljön tillgä
 
 För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöver du bli tillagd i Innovia Hubs Entra ID-katalog. Kontakta någon i teamet för att bli tillagd.
 
+### .env
+
+För att kunna använda AI-chatbotten behöver du en API-nyckel till OpenAI. Denna läggs till i en .env-fil i backend-mappen med följande innehåll:
+
+`OPENAI_KEY = "din-nyckel"`
+
 ### Vad du behöver installerat
 
 - Node.js (version 18 eller senare)
@@ -53,6 +59,8 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
    ```
 
 2. **Starta backend (API):**
+
+   Vill du slippa att behöva ha en lokal databas? Du kan enkelt byta till inMemory-databas genom att ändra variabeln useInMemory på rad 36 i Program.cs till true. Därefter, kör:
 
    ```bash
    cd backend
