@@ -70,7 +70,7 @@ export class AiViewComponent {
                chatHistory: JSON.stringify(this.chatConversation()),
                availableTimes: JSON.stringify(times)
             }
-            console.log('skickar meddelande', chatData.availableTimes);
+
             this.chatService.sendChat(chatData)
                .subscribe(response => {
                   this.answerIsPending.set(false);

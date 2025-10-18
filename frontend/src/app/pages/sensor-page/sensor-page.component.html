@@ -1,5 +1,20 @@
 <div class="page-container">
-  <div class="page-container__inner">
-    <p>sensor-page works!</p>
-  </div>
+   <div class="page-container__inner">
+      <div class="grid grid-cols-2 items-center">
+         @for (sensor of sensors(); track $index) {
+            <div class="bg-bg-alt rounded-2xl p-5 m-5 flex flex-col justify-center text-center">
+               <h3 class="text-lg font-bold">{{ sensor.model }}</h3>
+               <div class="grid grid-cols-2 gap-2 justify-items-center">
+                  @for (metric of sensor.sensorData; track $index) {
+                     <div class="rounded-full bg-border flex flex-col justify-center items-center py-5 mt-5 w-3/4">
+                        <h6 class="text-xl p-5" [innerHTML]="this.formatMetricType(metric.type!)"></h6>
+                        <h5 class="text-2xl font-bold">{{ metric.value }} {{ metric.unit }}</h5>
+                        <p class="text-sm">Uppdaterad:<br> {{ this.formatTime(metric.time!) }}</p>
+                     </div>
+                  }
+               </div>
+            </div>
+         }
+      </div>
+   </div>
 </div>
