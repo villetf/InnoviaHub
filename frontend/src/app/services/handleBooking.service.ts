@@ -69,7 +69,6 @@ export class HandleBookingService {
    makeAiBooking(bookingObject: BookingObject) {
       this.setSelectedResourceId(bookingObject.resourceId);
       this.setSelectedDate(bookingObject.date);
-      console.log('valt datum: ', this.selectedDate());
       this.confirmationIsVisible = true;
    }
 
