@@ -1,0 +1,60 @@
+<button
+   type="button"
+   class="font-medium inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 bg-[var(--color-primary)] text-white shadow-sm"
+   (click)="openAiView()"
+>
+   Boka med AI
+   <i class="fa-regular fa-message"></i>
+</button>
+
+@if (aiViewIsOpen()) {
+   @if (!aiViewIsMinimized()) {
+      <div 
+         class="flex flex-col items-center fixed bottom-0 right-0 h-[40%] w-[25rem] z-50 transition-transform duration-300 bg-[#FFCDC6] border-t border-l border-[#FF998D] rounded-tl-[15%]"
+      >
+         <div class="w-full flex justify-end mr-7 mt-2">
+            <span class="flex items-end mr-3 cursor-pointer" (click)="minimizeAiView()"><div class="h-1 w-4 bg-black mb-2"></div></span>
+            <span class="font-bold text-lg cursor-pointer" (click)="closeAiView()">X</span>
+         </div>
+         <div class="overflow-scroll">
+
+            @for (message of chatConversation(); track $index) {
+               <div class="w-full flex mb-3" [class.justify-end]="message.author === 'user'">
+                  <div class="bg-[#FFE1DD] rounded-2xl mx-3 max-w-[66%] p-2 text-sm">
+                     {{ message.text }}
+                     @if (message.bookingObjects) {
+                        @for (bookingObject of message.bookingObjects; track $index) {
+                           <app-chat-booking-button [bookingObject]="bookingObject" />
+                        }
+                     }
+                  </div>
+               </div>
+            }
+            @if (answerIsPending()) {
+               <div class="w-full flex mb-3 justify-start">
+                  <div class="bg-[#FFE1DD] rounded-2xl mx-3 max-w-[66%] p-2 text-sm">
+                     . . .
+                  </div>
+               </div>
+            }
+         </div>
+         <div class="flex items-center w-full justify-center mt-auto mb-2">
+            <input type="text" placeholder="Skicka ett meddelande..." [(ngModel)]="messageToBeSent" #chatInput class="w-[85%] bg-white rounded-full mr-2 p-2 outline-none">
+            <button type="button" (click)="sendChat()" [disabled]="answerIsPending() || messageToBeSent() == ''">
+               <i  class="fa-regular fa-paper-plane text-xl" [ngClass]="answerIsPending() || messageToBeSent() == '' ? 'text-gray-500 cursor-default' : 'text-black cursor-pointer'"></i>
+            </button>
+         </div>
+      </div>
+   } @else {
+      <div 
+         class="flex flex-col items-center fixed bottom-0 right-0 h-[5%] w-[25rem] z-50 transition-transform duration-300 bg-[#FFCDC6] border border-[#FF998D] rounded-tl-3xl"
+         (click)="enlargenAiView()"
+         >
+         <div class="w-full flex justify-end mr-7 mt-2 cursor-pointer">
+            <span class="ml-8 mt-1 mr-auto">Fortsätt chatta...</span>
+            <span class="flex items-end mr-3 cursor-pointer" (click)="enlargenAiView()"><div class="h-1 w-4 bg-black mb-2"></div></span>
+            <span class="font-bold text-lg cursor-pointer" (click)="closeAiView()">X</span>
+         </div>
+      </div>
+   }
+}

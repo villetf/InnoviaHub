@@ -5,16 +5,19 @@ import {
   AdminTabId,
   NavTabsComponent,
 } from '../nav-tabs/nav-tabs.component';
+import { AiViewComponent } from "../ai-view/ai-view.component";
+import { ResourceListItem } from '../../../types/ResourceListItem';
 
 @Component({
   selector: 'app-bookingpage-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AiViewComponent],
   templateUrl: './bookingpage-menu.component.html',
 })
 export class BookingpageMenuComponent {
   @Input() types: any[] = [];
   @Input() selectedTypeId?: number;
+  @Input() resources: ResourceListItem[] = [];
 
   @Output() selectType = new EventEmitter<number>();
 

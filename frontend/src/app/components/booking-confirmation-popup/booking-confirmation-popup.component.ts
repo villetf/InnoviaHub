@@ -17,7 +17,8 @@ export class BookingConfirmationPopupComponent implements OnInit {
   localDate: string | undefined = '';
 
   ngOnInit(): void {
-    this.localDate = this.selectedDate?.toLocaleDateString();
+   this.selectedDate = typeof this.selectedDate === 'string' ? new Date(this.selectedDate) : this.selectedDate;
+   this.localDate = this.selectedDate?.toLocaleDateString();
   }
 
   handleCancelClick() {

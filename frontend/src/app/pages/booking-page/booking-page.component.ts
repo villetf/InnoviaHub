@@ -4,7 +4,7 @@ import { BookingPaneComponent } from '../../components/booking-pane/booking-pane
 
 @Component({
   selector: 'app-booking-page',
-  imports: [BookingpagePaneComponent, BookingPaneComponent],
+  imports: [BookingpagePaneComponent],
   templateUrl: './booking-page.component.html',
   styleUrl: './booking-page.component.css',
 })

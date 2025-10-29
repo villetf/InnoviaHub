@@ -1,6 +1,6 @@
 # InnoviaHub
 
-Ett enkelt bokningssystem för resurser och faciliteter.
+Ett enkelt bokningssystem för resurser och faciliteter avsett för coworkingcentret Innovia Hub.
 
 ## Vad är InnoviaHub?
 
@@ -10,6 +10,7 @@ InnoviaHub är en webbapplikation där användare kan:
 - Boka rum och resurser
 - Se tillgängliga tider
 - Hantera sina bokningar
+- Få hjälp av en AI-bot med att göra sina bokningar
 
 ## Teknik
 
@@ -24,16 +25,23 @@ InnoviaHub är en webbapplikation där användare kan:
 - .NET 9.0
 - ASP.NET Core API
 - Entity Framework
+- OpenAI GPT-4.1 för AI-chatt
 
 ## Kom igång
 
 ### Snabbstart
 
-Om du inte vill installera applikationen själv finns produktionsmiljön tillgänglig på https://innoviahub-app-6hrgl.ondigitalocean.app/.
+Om du inte vill installera applikationen själv finns produktionsmiljön tillgänglig på https://innoviahub-app-6hrgl.ondigitalocean.app/. Notera att denna miljö innehåller den senaste stabila versionen, alltså inte funktioner som är under utveckling.
 
 ### Entra ID
 
 För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöver du bli tillagd i Innovia Hubs Entra ID-katalog. Kontakta någon i teamet för att bli tillagd.
+
+### .env
+
+För att kunna använda AI-chatbotten behöver du en API-nyckel till OpenAI. Denna läggs till i en .env-fil i backend-mappen med följande innehåll:
+
+`OPENAI_KEY = "din-nyckel"`
 
 ### Vad du behöver installerat
 
@@ -51,6 +59,8 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
    ```
 
 2. **Starta backend (API):**
+
+   Vill du slippa att behöva ha en lokal databas? Du kan enkelt byta till inMemory-databas genom att ändra variabeln useInMemory på rad 36 i Program.cs till true. Därefter, kör:
 
    ```bash
    cd backend
@@ -74,8 +84,9 @@ För att logga in, oavsett om det är lokalt eller i produktionsmiljön, behöve
 1. **Öppna webbläsaren** och gå till <http://localhost:4200>
 2. **Klicka "Login with Microsoft"** för att logga in
 3. **Välj datum** med datumväljaren
-4. **Boka resurser** (kommer snart)
-5. **Logga ut** när du är klar
+4. **Boka resurser** som är lediga
+5. **Alternativt, använd AI-chatten** för att få hjälp med att hitta en ledig tid
+6. **Logga ut** när du är klar
 
 ## Utveckling
 
