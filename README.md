@@ -86,7 +86,8 @@ För att kunna använda AI-chatbotten behöver du en API-nyckel till OpenAI. Den
 3. **Välj datum** med datumväljaren
 4. **Boka resurser** som är lediga
 5. **Alternativt, använd AI-chatten** för att få hjälp med att hitta en ledig tid
-6. **Logga ut** när du är klar
+6. Använd sensorsidan för att se data för sensorer på centret
+7. **Logga ut** när du är klar
 
 ## Utveckling
 
@@ -114,13 +115,12 @@ Om något inte fungerar:
 3. Kör `dotnet restore` i backend-mappen
 4. Starta om både frontend och backend
 
-## Bidra till projektet
+## Nyligen tillagda funktioner
 
-1. Skapa en ny branch: `git checkout -b min-nya-feature`
-2. Gör dina ändringar
-3. Committa: `git commit -m "Lägg till min nya feature"`
-4. Pusha: `git push origin min-nya-feature`
-5. Skapa en Pull Request
+Under oktober har följande funktioner lagts till:
+
+- AI-chattbot som hjälper dig att hitta ledig tider att boka
+- Översikt över sensorer samt integration mot IoT-system
 
 ---
 
