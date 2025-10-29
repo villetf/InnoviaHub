@@ -17,31 +17,38 @@ export class SensorPageComponent {
    sensors = signal<SensorWithData[]>([]);
    sensorsService = inject(SensorsService);
    toast = inject(HotToastService)
+   error = signal<Error | null>(null);
 
    tenantId = '735f1433-60d2-476e-9e9a-8fa8c4e89f90';
 
    async ngOnInit() {
       this.sensorsService.getAllSensors(this.tenantId)
-         .subscribe(result => {
-            for (const sensor of result) {
-               this.sensorsService.getLatestDataFromSensor(this.tenantId, sensor.id)
-                  .subscribe(resultData => {
-                     const lastMetric = resultData.measurements[resultData.measurements.length - 1];
-                     const latestMetrics = resultData.measurements.filter(m => m.time == lastMetric.time);
-                     for (const metric of latestMetrics) {
-                        if (!sensor.sensorData) {
-                           sensor.sensorData = [];
+         .subscribe({
+            next: result => {
+               for (const sensor of result) {
+                  this.sensorsService.getLatestDataFromSensor(this.tenantId, sensor.id)
+                     .subscribe(resultData => {
+                        const lastMetric = resultData.measurements[resultData.measurements.length - 1];
+                        const latestMetrics = resultData.measurements.filter(m => m.time == lastMetric.time);
+                        for (const metric of latestMetrics) {
+                           if (!sensor.sensorData) {
+                              sensor.sensorData = [];
+                           }
+                           sensor.sensorData?.push({
+                              time: metric.time,
+                              type: metric.type,
+                              value: Number((metric.value!).toFixed(1)),
+                              unit: metric.unit
+                           })
                         }
-                        sensor.sensorData?.push({
-                           time: metric.time,
-                           type: metric.type,
-                           value: Number((metric.value!).toFixed(1)),
-                           unit: metric.unit
-                        })
-                     }
-                  })
+                     })
+               }
+               this.sensors.set(result);
+            },
+            error: err => {
+               console.log('FEL UPSTOOOOOOOOOOOOD');
+               this.error.set(err);
             }
-            this.sensors.set(result);
          })
 
       const connection = new signalR.HubConnectionBuilder()
