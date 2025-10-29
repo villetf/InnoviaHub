@@ -16,5 +16,22 @@
             </div>
          }
       </div>
+
+      @if (error()) {
+         <div class="w-full flex justify-center">
+            <div class="bg-red-200 border border-red-600 w-9/12 h-50 rounded-2xl p-5">
+               <div class=" w-full text-center">
+                  Ett fel uppstod vid hämtning av sensorer:<br>
+                  <div class="m-3 p-3">
+                     <code>
+                        {{ error()?.message }}<br>
+                     </code>
+                  </div>
+
+                  Om felet kvarstår, kontakta IT-supporten.
+               </div>
+            </div>
+         </div>
+      }
    </div>
 </div>
