@@ -6,7 +6,7 @@ Ett enkelt bokningssystem för resurser och faciliteter avsett för coworkingcen
 
 För testning är följande konton tillagda i Entra ID:
 
-Adminbehörighet: janne@hiveandfive.se
+Adminbehörighet: janne@hiveandfive.se<br>
 Användarbehörighet: janne@kemikal.org
 
 ## Vad är InnoviaHub?
