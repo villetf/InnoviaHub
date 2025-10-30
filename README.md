@@ -2,6 +2,13 @@
 
 Ett enkelt bokningssystem för resurser och faciliteter avsett för coworkingcentret Innovia Hub.
 
+## Inloggning
+
+För testning är följande konton tillagda i Entra ID:
+
+Adminbehörighet: janne@hiveandfive.se
+Användarbehörighet: janne@kemikal.org
+
 ## Vad är InnoviaHub?
 
 InnoviaHub är en webbapplikation där användare kan:
